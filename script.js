@@ -32,7 +32,7 @@ const textInput = document.getElementById('text');
         if (addImage) {
           // Embed the predefined image in the center
           const img = new Image();
-          img.src = 'Wit_Cropped_Margin Background Removed.png'; // Updated image path
+          img.src = 'Wit_Cropped_Margin Background better better.png'; // Updated image path
           img.onload = () => {
             const maxSize = qrCanvas.width * 0.3; // Max image size is 30% of QR code
             const centerX = (qrCanvas.width - maxSize) / 2;
