@@ -1,0 +1,48 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+  }
+  #qrcode {
+    margin: 20px auto;
+  }
+  .toggle-container {
+    margin: 10px;
+  }
+  canvas {
+    transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
+    border-radius: 25%;
+  }
+  input[type="text"] {
+    width: 80%;
+    max-width: 400px;
+    padding: 10px 15px;
+    margin: 20px auto;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 25px;
+    outline: none;
+    
+  }
+  input[type="text"]:focus {
+    border-color: #007bff;
+  }
+  button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: block;
+    margin-left: auto;
+    margin-right: auto; /* Center the button */
+    border: none;
+    border-radius: 25px;
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  button:hover {
+    background-color: #0056b3;
+    box-shadow: 0px 4px 12px rgba(0, 86, 179, 0.4);
+  }
