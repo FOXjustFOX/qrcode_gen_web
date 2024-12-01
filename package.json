@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@bitjson/qr-code": "^1.0.2"
+  }
+}

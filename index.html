@@ -3,24 +3,60 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/@bitjson/qr-code@1.0.2/dist/qr-code.js"></script>
+  <script src="script.js" type="module"></script>
   <link rel="stylesheet" href="styles.css">
-  <title>Generator kodów QR WRSSu</title>
-  <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-    <script src="script.js" defer></script>
+
+  <title>QR Code with SVG Logo</title>
+ 
 </head>
 <body>
+  
+  <div style="text-align: center;">
+    <div id="header">
+      <h1>QR Code with SVG Logo</h1>
+    </div>
+    <h1>Customize Your QR Code</h1>
+    <form id="qr-form" style="margin-bottom: 2em;">
+      <label>
+        QR Code Content:
+        <input type="text" id="qr-content" value="hello_my_friend" placeholder="Enter content">
+      </label>
+      <br><br>
+      <label>
+        Module Color:
+        <input type="color" id="module-color" value="#1c7d43">
+      </label>
+      <br><br>
+      <label>
+        Position Ring Color:
+        <input type="color" id="position-ring-color" value="#13532d">
+      </label>
+      <br><br>
+      <label>
+        Position Center Color:
+        <input type="color" id="position-center-color" value="#70c559">
+      </label>
+      <br><br>
+      <label>
+        BG color:
+        <input type="color" id="bg-color" value="#ffffff">
+      </label>
+      <br><br>
+      <label>
+        size (px):
+        <input type="number" id="height" value="200" step="100">
+      </label>
+      <br><br>
+      <label>
+        Rotate QR Code (degrees):
+        <input id="rotate-value" type="number" min="0" max="360" step="1" value="45">
+      </label>
+      <button type="button" id="update-qr">Create QR Code</button>
+    </form>
 
-  <h1>Generator kodów QR WRSSu</h1>
-  <input type="text" id="text" placeholder="Enter text or URL" />
-  <div class="toggle-container">
-    <label>
-      <input type="checkbox" id="toggleImage" />
-      Logo WRSS
-    </label>
+    <div id="qr-container" style="display: inline-block;"></div>
+    
   </div>
-  <div id="qrcode"></div>
-  <canvas id="canvas" style="opacity: 0;"></canvas>
-  <button id="downloadBtn" style="display: none;">Download QR Code</button>
-
 </body>
 </html>

@@ -1,11 +1,48 @@
+/* Reset default browser styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 body {
+    height: 100vh;
+    /* overflow: hidden; */
     font-family: Arial, sans-serif;
     text-align: center;
-    padding: 20px;
+  }
+  h1 {
+    margin-top: 0px;
+    padding-top: 20px;
+    font-size: 24px;
+  }
+  #header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 20px;
+    background-color: #f8f9fa;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   }
   #qrcode {
-    margin: 20px auto;
+    margin: 0px ;
+    overflow: hidden; /* Ensure content doesn't exceed boundaries */
+    margin: 0px;
+    overflow: hidden;
+    display: inline-block; /* Ensure QR code stays as a block */
+    transition: transform 3s ease; /* Smooth rotation effect */
+
   }
+  #icon-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  #qrCodeElement {
+  border-radius: 25px;
+  padding: 0px;
+  margin: 0px;
+  height: min-content;
+}
   .toggle-container {
     margin: 10px;
   }
@@ -45,4 +82,13 @@ body {
   button:hover {
     background-color: #0056b3;
     box-shadow: 0px 4px 12px rgba(0, 86, 179, 0.4);
+  }
+  #logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20%;
+    height: auto;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* Ensure logo doesn’t interfere with QR scanning */
   }
