@@ -15,6 +15,16 @@ body {
     padding-top: 20px;
     font-size: 24px;
   }
+  
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* text-align: center; */
+    margin: 0px;
+    padding: 0px;
+  }
+
   #header {
     display: flex;
     justify-content: center;
@@ -48,7 +58,7 @@ body {
   }
   canvas {
     transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-    border-radius: 25%;
+    border-radius: 5%;
   }
   input[type="text"] {
     width: 80%;
