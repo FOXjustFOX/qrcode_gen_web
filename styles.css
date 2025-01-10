@@ -65,7 +65,7 @@ body {
   }
   canvas {
     transition: opacity 0.3s ease-in-out; /* Smooth fade-in effect */
-    margin: 100px;
+    /* margin: 100px; */
     /* border-radius: 5%; */
   }
   input[type="text"] {

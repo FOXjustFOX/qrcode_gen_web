@@ -2,6 +2,7 @@ const textInput = document.getElementById('text');
 const qrCanvas = document.getElementById('canvas');
 const qrColorInput = document.getElementById('qrColor'); // QR code color input
 const bgColorInput = document.getElementById('bgColor'); // Background color input
+const bgColorLabel = document.getElementById('bgColorLabel'); // Background color label
 const qrbg  = document.getElementById('bg'); // Container div
 const downloadBtn = document.createElement('button'); // Create a download button
 downloadBtn.textContent = "Download QR Code";
@@ -10,15 +11,25 @@ document.body.appendChild(downloadBtn); // Append it to the body
 
 const qrSize = 300; // Total QR code size
 const logoSrc = 'WRSS_WIT_Logo.svg'; // Path to your SVG logo
-let logoSize = qrSize * 0.213; // Logo size
+let logoSize = qrSize * 0.4; // Logo size
 let safeZone = logoSize * 1.1; // Slightly larger than logo for padding
 
 let cellSize
 
 const margin = 20; // margin around the QR code
 
+const transparentBg = document.getElementById('transparentBg');
+
 const logoWidth2 = qrCanvas / 2;
 const logoHeight2 = qrCanvas / 2;
+
+const removeBgImageBtn = document.createElement('button');
+removeBgImageBtn.textContent = "Remove Background Image";
+removeBgImageBtn.style.display = "none"; // Hide by default
+document.body.appendChild(removeBgImageBtn); 
+
+const rotationRange = document.getElementById('rotationRange');
+const rotationValueDisplay = document.getElementById('rotationValue');
 
 // Adjust canvas for high DPI
 function adjustCanvasForHighDPI(canvas, width, height) {
@@ -33,84 +44,166 @@ function adjustCanvasForHighDPI(canvas, width, height) {
     return ctx;
 }
 
+// Function to update the background color labels
+function updateBackgroundColorLabel() {
+  if (transparentBg.checked) {
+    bgColorInput.style.display = 'none';
+    bgColorLabel.style.display = 'none';
+  } else {
+    bgColorInput.style.display = '';
+    bgColorLabel.style.display = '';
+  }
+}
 
+const offscreenScale = 3; // 3x resolution
 
 async function generateQR() {
-  const text = textInput.value.trim();
+  const text    = textInput.value.trim();
   const qrColor = qrColorInput.value;
   const bgColor = bgColorInput.value;
 
+  const displaySize = 650;
+
+
   if (!text) {
-    qrCanvas.getContext('2d').clearRect(0, 0, qrSize, qrSize);
+    // Clear main canvas
+    const mainCtx = adjustCanvasForHighDPI(qrCanvas, displaySize, displaySize);
+    mainCtx.clearRect(0, 0, displaySize, displaySize);
+    downloadBtn.style.display = "none";
     return;
   }
 
-  const ctx = adjustCanvasForHighDPI(qrCanvas, qrSize, qrSize); 
-  ctx.fillStyle = bgColor;
-  ctx.fillRect(0, 0, qrSize, qrSize); // Fill entire canvas w/ bgColor
+  // 1) Create an offscreen canvas to draw the QR code
+  const offscreenCanvas = document.createElement('canvas');
+  offscreenCanvas.width  = qrSize * offscreenScale;
+  offscreenCanvas.height = qrSize * offscreenScale;
+  const offscreenCtx = offscreenCanvas.getContext('2d');
 
-  // Generate the QR data first
-  const qrCode = await QRCode.create(text, {
-    errorCorrectionLevel: 'H',
-  });
+  // 2) Draw the entire QR code (with background/logo) on the offscreen context
+  await drawQrToCtx(offscreenCtx, text, qrColor, bgColor);
 
-  // Now define margin, usableSize, and cellSize
-  const margin = 20;
-  const usableSize = qrSize - 2 * margin;
-  cellSize = usableSize / qrCode.modules.size; // OK now, because qrCode exists
+  // 3) Get the desired rotation from the range input
+  const rotationDegrees = parseFloat(rotationRange.value) || 0;
 
-  // Then define centerX, centerY, radius, etc.
-  const centerX = margin + usableSize / 2;
-  const centerY = margin + usableSize / 2;
-  const radius = safeZone / 2;
+  // 4) Prepare the main canvas
+  const mainCtx = adjustCanvasForHighDPI(qrCanvas, displaySize, displaySize);
+  mainCtx.clearRect(0, 0, displaySize, displaySize);
 
-  cellSize = usableSize / qrCode.modules.size;
+  // 5) Apply the rotation transform and draw the offscreen canvas onto the main
+  mainCtx.save();
+
+  // Translate to the center, rotate, then translate back
+  mainCtx.translate(displaySize / 2, displaySize / 2);
+  mainCtx.rotate((rotationDegrees * Math.PI) / 180);
+  mainCtx.drawImage(
+    offscreenCanvas,
+    -450/2, -450/2, 450, 450    // Half the offscreen height
+  );
   
 
-  // Draw QR code modules, skipping the logo area
+  mainCtx.restore();
+
+  // 6) Show the download button
+  downloadBtn.style.display = "block";
+}
+
+async function drawQrToCtx(ctx, text, qrColor, bgColor) {
+  // (1) Clear the given context
+  ctx.clearRect(0, 0, qrSize * offscreenScale, qrSize * offscreenScale);
+
+  // (2) Draw background image or color
+  if (backgroundImageSrc && !transparentBg.checked) {
+    await drawBgImage(ctx, backgroundImageSrc, qrSize * offscreenScale, qrSize * offscreenScale);
+  } else if (!transparentBg.checked) {
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(0, 0, qrSize * offscreenScale, qrSize * offscreenScale);  }
+
+  // (3) Generate QR data
+  const qrCode = await QRCode.create(text, { errorCorrectionLevel: 'H' });
+
+  // (4) Draw QR modules
+  const margin     = 20 * offscreenScale;
+  const usableSize = (qrSize - 2 * 20) * offscreenScale; 
+  const cellSize   = usableSize / qrCode.modules.size;
+  const logoStart  = margin + (usableSize - safeZone) / 2 - 1;
+  const logoEnd    = logoStart + safeZone;
+
   qrCode.modules.data.forEach((bit, index) => {
     const col = index % qrCode.modules.size;
     const row = Math.floor(index / qrCode.modules.size);
-  
-    // Each module’s top-left corner
+
     const x = margin + col * cellSize;
     const y = margin + row * cellSize;
-  
-    // --- CIRCLE CHECK ---
-    // Use the center of the module cell for best visual results
-    const moduleCenterX = x + cellSize / 2;
-    const moduleCenterY = y + cellSize / 2;
-  
-    // Distance² from (centerX, centerY)
-    const distSq = (moduleCenterX - centerX) ** 2 + (moduleCenterY - centerY) ** 2;
-    const rSq = radius ** 2;
-  
-    // Skip any modules that fall within the circular safe zone
-    if (distSq <= rSq) {
-      return; 
+
+    // Skip safe zone
+    if (x >= logoStart && x < logoEnd && y >= logoStart && y < logoEnd) {
+      return;
     }
-  
-    // Otherwise, fill the module
-    ctx.fillStyle = bit ? qrColor : bgColor;
-    ctx.fillRect(x, y, cellSize, cellSize);
+
+    // Draw module
+    if (bit) {
+      ctx.fillStyle = qrColor;
+      ctx.fillRect(Math.floor(x), Math.floor(y), Math.ceil(cellSize), Math.ceil(cellSize));    } 
+    // Fill white modules if not transparent & no image
+    else if (!transparentBg.checked && !backgroundImageSrc) {
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(Math.floor(x), Math.floor(y), Math.ceil(cellSize), Math.ceil(cellSize));    }
   });
 
-  // Center for the logo is now margin + half of the usable area
-
-  // Pass bgColor, qrColor along as before
-  await drawSvgToCanvas(
-    logoSrc,
-    qrCanvas,
-    centerX,   // pass the same center
-    centerY,   // pass the same center
-    logoSize,
-    logoSize,
-    bgColor,
-    qrColor
-  );
-
-  downloadBtn.style.display = "block";
+  // (5) Draw the logo onto this context
+  const centerX = margin + usableSize / 2 + cellSize / 2;
+  const centerY = margin + usableSize / 2 + cellSize / 2;
+  await drawSvgToCanvas(logoSrc, ctx.canvas, centerX, centerY, logoSize, logoSize, bgColor, qrColor);
 }
+
+function drawBgImage(ctx, src, width, height) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      // Fill entire canvas with this image
+      ctx.drawImage(img, 0, 0, width, height);
+      resolve();
+    };
+    img.onerror = reject;
+    img.src = src; // e.g. a data URL from FileReader
+  });
+}
+
+// bg image
+const bgImageInput = document.getElementById('bgImage');
+
+let backgroundImageSrc = null;
+
+bgImageInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) {
+    removeBgImageBtn.style.display = "none";
+    return;
+  }; 
+  removeBgImageBtn.style.display = "block";
+
+  const reader = new FileReader();
+  reader.onload = (evt) => {
+    backgroundImageSrc = evt.target.result; 
+    generateQR(); // Regenerate the QR to show new background
+  };
+  reader.readAsDataURL(file);
+});
+
+rotationRange.addEventListener('input', () => {
+  rotationValueDisplay.textContent = rotationRange.value + '°';
+  generateQR();
+});
+
+removeBgImageBtn.addEventListener('click', (e) => {
+e.preventDefault();
+bgImageInput.value = "";
+backgroundImageSrc = null;
+removeBgImageBtn.style.display = "none";
+generateQR(); // Regenerate the QR to remove background
+});
+
+
 // Function to update the div background color
 function updateDivBackgroundColor() {
   qrCanvas.style.backgroundColor = bgColorInput.value; // Change the div's background color
@@ -121,12 +214,13 @@ async function drawSvgToCanvas(svgPath, canvas, centerX, centerY, width, height,
   let svgText = await response.text();
 
   // Modify the SVG to change colors dynamically
-  svgText = svgText.replace(
-    /<svg([^>]*)>/,
-    `<svg$1><rect width="100%" height="100%" fill="${bgColor}" />`
-  );
 
-
+  if (!transparentBg.checked && !backgroundImageSrc) {
+    svgText = svgText.replace(
+      /<svg([^>]*)>/,
+      `<svg$1><rect width="100%" height="100%" fill="${bgColor}" />`
+    );
+  }
 
   const svgBlob = new Blob([svgText], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(svgBlob);
@@ -160,6 +254,12 @@ textInput.addEventListener('input', generateQR);
 qrColorInput.addEventListener('input', generateQR); // Regenerate QR code on color change
 bgColorInput.addEventListener('input', generateQR);
 downloadBtn.addEventListener('click', downloadQRCode);
+transparentBg.addEventListener('change', () => {
+  updateBackgroundColorLabel();
+  generateQR();
+}
+);
 
 // Initial call to ensure the QR code generates on load
 generateQR();
+updateBackgroundColorLabel();
