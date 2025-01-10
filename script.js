@@ -11,8 +11,12 @@ document.body.appendChild(downloadBtn); // Append it to the body
 
 const qrSize = 300; // Total QR code size
 const logoSrc = 'WRSS_WIT_Logo.svg'; // Path to your SVG logo
-let logoSize = qrSize * 0.4; // Logo size
-let safeZone = logoSize * 1.1; // Slightly larger than logo for padding
+let logoSize = qrSize * 0.2; // Logo size
+
+const offscreenScale = 3; // 3x resolution
+
+const scaledLogoSize = logoSize * offscreenScale; 
+const scaledSafeZone = scaledLogoSize * 1.1;
 
 let cellSize
 
@@ -55,7 +59,6 @@ function updateBackgroundColorLabel() {
   }
 }
 
-const offscreenScale = 3; // 3x resolution
 
 async function generateQR() {
   const text    = textInput.value.trim();
@@ -125,35 +128,63 @@ async function drawQrToCtx(ctx, text, qrColor, bgColor) {
   const margin     = 20 * offscreenScale;
   const usableSize = (qrSize - 2 * 20) * offscreenScale; 
   const cellSize   = usableSize / qrCode.modules.size;
-  const logoStart  = margin + (usableSize - safeZone) / 2 - 1;
-  const logoEnd    = logoStart + safeZone;
+  
+  const logoStart = margin + (usableSize - scaledSafeZone) / 2;
+  const logoEnd   = logoStart + scaledSafeZone;
 
   qrCode.modules.data.forEach((bit, index) => {
-    const col = index % qrCode.modules.size;
-    const row = Math.floor(index / qrCode.modules.size);
+  const col = index % qrCode.modules.size;
+  const row = Math.floor(index / qrCode.modules.size);
 
-    const x = margin + col * cellSize;
-    const y = margin + row * cellSize;
+  const x = margin + col * cellSize;
+  const y = margin + row * cellSize;
 
-    // Skip safe zone
-    if (x >= logoStart && x < logoEnd && y >= logoStart && y < logoEnd) {
-      return;
-    }
+  const cellLeft   = x;
+  const cellTop    = y;
+  const cellRight  = x + cellSize;
+  const cellBottom = y + cellSize;
 
-    // Draw module
-    if (bit) {
-      ctx.fillStyle = qrColor;
-      ctx.fillRect(Math.floor(x), Math.floor(y), Math.ceil(cellSize), Math.ceil(cellSize));    } 
-    // Fill white modules if not transparent & no image
-    else if (!transparentBg.checked && !backgroundImageSrc) {
-      ctx.fillStyle = bgColor;
-      ctx.fillRect(Math.floor(x), Math.floor(y), Math.ceil(cellSize), Math.ceil(cellSize));    }
-  });
+  const zoneLeft   = logoStart;
+  const zoneTop    = logoStart;
+  const zoneRight  = logoEnd;
+  const zoneBottom = logoEnd;
+
+  // Check intersection
+  const intersectsSafeZone =
+    !(cellRight  < zoneLeft  ||
+      cellLeft   > zoneRight ||
+      cellBottom < zoneTop   ||
+      cellTop    > zoneBottom);
+
+  if (intersectsSafeZone) {
+    // Skip the entire cell if it even partially intersects
+    return;
+  }
+
+  // Draw your QR cell if it's fully outside the safe zone
+  if (bit) {
+    ctx.fillStyle = qrColor;
+    ctx.fillRect(
+      Math.floor(cellLeft), 
+      Math.floor(cellTop),
+      Math.ceil(cellSize),
+      Math.ceil(cellSize)
+    );
+  } else if (!transparentBg.checked && !backgroundImageSrc) {
+    ctx.fillStyle = bgColor;
+    ctx.fillRect(
+      Math.floor(cellLeft),
+      Math.floor(cellTop),
+      Math.ceil(cellSize),
+      Math.ceil(cellSize)
+    );
+  }
+});
 
   // (5) Draw the logo onto this context
-  const centerX = margin + usableSize / 2 + cellSize / 2;
-  const centerY = margin + usableSize / 2 + cellSize / 2;
-  await drawSvgToCanvas(logoSrc, ctx.canvas, centerX, centerY, logoSize, logoSize, bgColor, qrColor);
+  const centerX = margin + usableSize / 2;
+  const centerY = margin + usableSize / 2;
+  await drawSvgToCanvas(logoSrc, ctx.canvas, centerX, centerY, scaledLogoSize, scaledLogoSize, bgColor, qrColor);
 }
 
 function drawBgImage(ctx, src, width, height) {
