@@ -10,7 +10,7 @@ downloadBtn.style.display = "none"; // Hide initially
 document.body.appendChild(downloadBtn); // Append it to the body
 
 const qrSize = 300; // Total QR code size
-const logoSrc = 'WRSS_WIT_Logo.svg'; // Path to your SVG logo
+const logoSrc = 'WRSS_WIT_Logo.svg'; // Path to  SVG logo
 let logoSize = qrSize * 0.2; // Logo size
 
 const offscreenScale = 3; // 3x resolution
@@ -40,7 +40,7 @@ function adjustCanvasForHighDPI(canvas, width, height) {
     const dpr = window.devicePixelRatio || 1;
     canvas.width = width * dpr; // Scale the canvas resolution
     canvas.height = height * dpr;
-    canvas.style.width = `${width}px`; // Set the CSS size
+    canvas.style.width = `${width}px`; 
     canvas.style.height = `${height}px`;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = bgColor; // Set the background color
@@ -161,7 +161,7 @@ async function drawQrToCtx(ctx, text, qrColor, bgColor) {
     return;
   }
 
-  // Draw your QR cell if it's fully outside the safe zone
+  // Draw  QR cell if it's fully outside the safe zone
   if (bit) {
     ctx.fillStyle = qrColor;
     ctx.fillRect(
@@ -245,7 +245,6 @@ async function drawSvgToCanvas(svgPath, canvas, centerX, centerY, width, height,
   let svgText = await response.text();
 
   // Modify the SVG to change colors dynamically
-
   if (!transparentBg.checked && !backgroundImageSrc) {
     svgText = svgText.replace(
       /<svg([^>]*)>/,
