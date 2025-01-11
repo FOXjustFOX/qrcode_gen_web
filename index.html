@@ -1,80 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-        <link rel="stylesheet" href="styles.css" />
-        <title>QR Code Generator</title>
-    </head>
-    <body>
-        <div id="main-div">
-            <form>
-                <div>
-                    <input
-                        type="text"
-                        id="text"
-                        placeholder="Enter text for QR Code"
-                    />
-                </div>
-                <div>
-                    <label for="includeLogo">Include Logo</label>
-                    <input type="checkbox" id="includeLogo" checked />
-                </div>
-                <div>
-                    <label for="qrColor">QR Code Color:</label>
-                    <input type="color" id="qrColor" />
-                </div>
-                <div>
-                    <label for="rotationRange">Rotation: </label>
-                    <div>
-                        <input
-                            type="range"
-                            id="rotationRange"
-                            min="0"
-                            max="360"
-                            value="0"
-                        />
-                        <input
-                            id="rotationValue"
-                            type="number"
-                            min="0"
-                            max="360"
-                            value="0"
-                        />
-                    </div>
-                </div>
-                <div>
-                    <label for="transparentBg">Transparent Background?</label>
-                    <input type="checkbox" id="transparentBg" />
-                </div>
-                <div>
-                    <label id="bgImageLabel" for="bgImage"
-                        >Background image:</label
-                    >
-                    <input type="file" id="bgImage" accept="image/*" />
-
-                    <button id="removeBgImgBtn" style="display: none">
-                        Remove Background Image
-                    </button>
-                </div>
-                <div>
-                    <label for="bgColor" id="bgColorLabel"
-                        >Background Color:</label
-                    >
-                    <input type="color" id="bgColor" value="#ffffff" />
-                </div>
-            </form>
-            <canvas id="canvas"></canvas>
-            <div>
-                <button id="downloadBtn" style="display: none">
-                    Download QR Code
-                </button>
-                <button id="copyBtn" style="display: none">
-                    Copy QR Code to clipboard
-                </button>
-            </div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <title>QR Code Generator</title>
+  </head>
+  <body>
+    <div id="main-div">
+      <form>
+        <div>
+          <input type="text" id="text" placeholder="Enter text for QR Code" />
         </div>
-        <script src="script.js"></script>
-    </body>
+        <div>
+          <label for="includeLogo">Include Logo</label>
+          <input type="checkbox" id="includeLogo" checked />
+        </div>
+        <div>
+          <label for="qrColor">QR Code Color:</label>
+          <input type="color" id="qrColor" />
+        </div>
+        <div>
+          <label for="rotationRange">Rotation: </label>
+          <div>
+            <input type="range" id="rotationRange" min="0" max="360" value="0" />
+            <input id="rotationValue" type="number" min="0" max="360" value="0" />
+          </div>
+        </div>
+        <div>
+          <label for="transparentBg">Transparent Background?</label>
+          <input type="checkbox" id="transparentBg" />
+        </div>
+        <div>
+          <label id="bgImageLabel" for="bgImage">Background image:</label>
+          <input type="file" id="bgImage" accept="image/*" />
+
+          <button id="removeBgImgBtn" style="display: none">Remove Background Image</button>
+        </div>
+        <div>
+          <label for="bgColor" id="bgColorLabel">Background Color:</label>
+          <input type="color" id="bgColor" value="#ffffff" />
+        </div>
+      </form>
+      <canvas id="canvas"></canvas>
+      <div>
+        <button id="downloadBtn" style="display: none">Download QR Code</button>
+        <button id="copyBtn" style="display: none">Copy QR Code to clipboard</button>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
 </html>
