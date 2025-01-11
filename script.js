@@ -282,6 +282,8 @@ async function drawSvgToCanvas(svgPath, canvas, centerX, centerY, width, height,
     );
   }
 
+  svgText = svgText.replace(/stroke="[^"]*"/g, `stroke="${qrColor}"`);
+
   const svgBlob = new Blob([svgText], { type: 'image/svg+xml' });
   const url = URL.createObjectURL(svgBlob);
 
