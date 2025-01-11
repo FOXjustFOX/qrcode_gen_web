@@ -24,6 +24,10 @@ const margin = 20; // margin around the QR code
 
 const transparentBg = document.getElementById('transparentBg');
 
+const backgroundImageLabel = document.getElementById('bgImageLabel');
+
+const includeLogoCheckbox = document.getElementById('includeLogo');
+
 const logoWidth2 = qrCanvas / 2;
 const logoHeight2 = qrCanvas / 2;
 
@@ -53,9 +57,18 @@ function updateBackgroundColorLabel() {
   if (transparentBg.checked) {
     bgColorInput.style.display = 'none';
     bgColorLabel.style.display = 'none';
+    bgImageInput.style.display = 'none';
+
+    bgImageInput.value = "";
+    backgroundImageSrc = null;
+    removeBgImageBtn.style.display = "none";
+    backgroundImageLabel.style.display = 'none';
+
   } else {
     bgColorInput.style.display = '';
     bgColorLabel.style.display = '';
+    bgImageInput.style.display = '';
+    backgroundImageLabel.style.display = '';
   }
 }
 
@@ -133,58 +146,71 @@ async function drawQrToCtx(ctx, text, qrColor, bgColor) {
   const logoEnd   = logoStart + scaledSafeZone;
 
   qrCode.modules.data.forEach((bit, index) => {
-  const col = index % qrCode.modules.size;
-  const row = Math.floor(index / qrCode.modules.size);
+    const col = index % qrCode.modules.size;
+    const row = Math.floor(index / qrCode.modules.size);
 
-  const x = margin + col * cellSize;
-  const y = margin + row * cellSize;
+    const x = margin + col * cellSize;
+    const y = margin + row * cellSize;
 
-  const cellLeft   = x;
-  const cellTop    = y;
-  const cellRight  = x + cellSize;
-  const cellBottom = y + cellSize;
+    const cellLeft   = x;
+    const cellTop    = y;
+    const cellRight  = x + cellSize;
+    const cellBottom = y + cellSize;
 
-  const zoneLeft   = logoStart;
-  const zoneTop    = logoStart;
-  const zoneRight  = logoEnd;
-  const zoneBottom = logoEnd;
+    const zoneLeft   = logoStart;
+    const zoneTop    = logoStart;
+    const zoneRight  = logoEnd;
+    const zoneBottom = logoEnd;
 
-  // Check intersection
-  const intersectsSafeZone =
-    !(cellRight  < zoneLeft  ||
-      cellLeft   > zoneRight ||
-      cellBottom < zoneTop   ||
-      cellTop    > zoneBottom);
+    // Check intersection
+    const intersectsSafeZone =
+      !(cellRight  < zoneLeft  ||
+        cellLeft   > zoneRight ||
+        cellBottom < zoneTop   ||
+        cellTop    > zoneBottom);
 
-  if (intersectsSafeZone) {
-    // Skip the entire cell if it even partially intersects
-    return;
-  }
+        const logoIsActive = includeLogoCheckbox.checked;
 
-  // Draw  QR cell if it's fully outside the safe zone
-  if (bit) {
-    ctx.fillStyle = qrColor;
-    ctx.fillRect(
-      Math.floor(cellLeft), 
-      Math.floor(cellTop),
-      Math.ceil(cellSize),
-      Math.ceil(cellSize)
-    );
-  } else if (!transparentBg.checked && !backgroundImageSrc) {
-    ctx.fillStyle = bgColor;
-    ctx.fillRect(
-      Math.floor(cellLeft),
-      Math.floor(cellTop),
-      Math.ceil(cellSize),
-      Math.ceil(cellSize)
-    );
-  }
+    // Then in the loop:
+    if (logoIsActive && intersectsSafeZone) {
+      // Skip the entire cell if it partially intersects
+      return;
+    }
+
+    // Draw  QR cell if it's fully outside the safe zone
+    if (bit) {
+      ctx.fillStyle = qrColor;
+      ctx.fillRect(
+        Math.floor(cellLeft), 
+        Math.floor(cellTop),
+        Math.ceil(cellSize),
+        Math.ceil(cellSize)
+      );
+    } else if (!transparentBg.checked && !backgroundImageSrc) {
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(
+        Math.floor(cellLeft),
+        Math.floor(cellTop),
+        Math.ceil(cellSize),
+        Math.ceil(cellSize)
+      );
+    }
 });
-
+if (includeLogoCheckbox.checked) {
   // (5) Draw the logo onto this context
   const centerX = margin + usableSize / 2;
   const centerY = margin + usableSize / 2;
-  await drawSvgToCanvas(logoSrc, ctx.canvas, centerX, centerY, scaledLogoSize, scaledLogoSize, bgColor, qrColor);
+  await drawSvgToCanvas(
+    logoSrc,
+    ctx.canvas,
+    centerX,
+    centerY,
+    scaledLogoSize,
+    scaledLogoSize,
+    bgColor,
+    qrColor
+  );
+};
 }
 
 function drawBgImage(ctx, src, width, height) {
@@ -199,6 +225,10 @@ function drawBgImage(ctx, src, width, height) {
     img.src = src; // e.g. a data URL from FileReader
   });
 }
+
+includeLogoCheckbox.addEventListener('change', () => {
+  generateQR(); 
+});
 
 // bg image
 const bgImageInput = document.getElementById('bgImage');
