@@ -22,7 +22,7 @@ body {
     margin: 20px;
     padding-left: 10px;
 
-    border: 1px solid black;
+    /* border: 1px solid black; */
     border-radius: 20px;
     background-color: #b9b9b9;
 }
@@ -32,9 +32,9 @@ body {
 }
 #text {
     width: 760px;
-    margin-top: 10px;
+    /* margin-top: 10px; */
     padding: 10px;
-    border: 1px solid black;
+    border: 0px solid black;
     border-radius: 10px;
     background-color: #cccccc;
 }
@@ -52,7 +52,7 @@ body {
     flex-direction: column;
     align-items: center;
 
-    border: 1px solid #b6b6b6;
+    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     background-color: #b9b9b9;
 }
@@ -134,7 +134,7 @@ body {
     width: 50%;
     margin: 10px;
 
-    border: 1px solid #b6b6b6;
+    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     background-color: #b9b9b9;
 }
@@ -142,7 +142,7 @@ body {
     width: 50%;
     margin: 10px;
 
-    border: 1px solid #b6b6b6;
+    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     background-color: #b9b9b9;
 }
@@ -157,7 +157,7 @@ body {
     justify-content: center;
     align-items: center;
 
-    border: 1px solid #b6b6b6;
+    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     background-color: #b9b9b9;
 }
