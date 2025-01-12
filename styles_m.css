@@ -1,0 +1,57 @@
+body {
+  padding: 0;
+  margin: 0;
+
+  background-color: #ccc8c8;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.section-container {
+  width: 240px;
+  height: 700px;
+  margin: 10px;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  border: 1px solid #b6b6b6;
+  border-radius: 20px;
+  background-color: #b9b9b9;
+}
+#image-container {
+  width: 200px;
+  height: 200px;
+  padding: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 3px dashed black;
+  border-radius: 3px;
+  background-color: #ccc8c8;
+
+  /* by zdj. tła się ładnie dopasowało */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  /* bg color + opacity */
+  background-color: #ccc8c880;
+  background-blend-mode: lighten;
+}
+.section-title {
+  width: 200px;
+  margin-top: 10px;
+  margin-bottom: 50px;
+
+  font-size: x-large;
+}
+#icon-image {
+  width: 50px;
+  height: 50px;
+}
+#bg-image {
+  display: none;
+}
