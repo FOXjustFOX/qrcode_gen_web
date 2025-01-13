@@ -1,27 +1,26 @@
-body,
-html {
+html,
+body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 100vh; /* Instead of fixed 100% */
-
-    overflow-x: hidden; /* Prevent unwanted scrollbars */
-    overflow-y: auto;
+    min-height: 100vh;
+    /* Instead of aligning center, use a column layout */
     display: flex;
+    flex-direction: column;
     /* justify-content: center; */
     align-items: center;
-    flex-direction: column;
     box-sizing: border-box;
 }
 #container {
+    flex:1;
     display: flex;
+    /* max-width: 70%; */
+
     /* flex-wrap: wrap; Allow containers to wrap */
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
-    height: 100%;
-    min-height: 100vh; /* Ensure full height */
+    /* height: 100%; */
+    /* min-height: 100vh; Ensure full height */
     flex-direction: row;
     margin-top: 10px;
 }
@@ -315,4 +314,9 @@ html {
     /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     /* background-color: #b9b9b9; */
+}
+footer {
+    text-align: center;
+    /* optionally margin-top: auto; if you ever need a forced push-down */
+    margin-top: auto;
 }
