@@ -3,24 +3,17 @@ body {
     margin: 0;
     padding: 0;
     min-height: 100vh;
-    /* Instead of aligning center, use a column layout */
     display: flex;
     flex-direction: column;
-    /* justify-content: center; */
     align-items: center;
     box-sizing: border-box;
 }
 #container {
-    flex:1;
+    flex: 1;
     display: flex;
-    /* max-width: 70%; */
-
-    /* flex-wrap: wrap; Allow containers to wrap */
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
-    /* height: 100%; */
-    /* min-height: 100vh; Ensure full height */
     flex-direction: row;
     margin-top: 10px;
 }
@@ -32,10 +25,9 @@ body {
     width: 60%;
     align-items: center;
     margin: 20px;
-    border: 3px solid black;
-    border-radius: 20px;
+    /* border: 3px solid black; */
+    /* border-radius: 20px; */
     padding: 10px;
-
 }
 .disabled {
     pointer-events: none;
@@ -43,19 +35,13 @@ body {
 }
 #title-container {
     display: flex;
-    /* justify-content: left; */
     box-sizing: border-box;
     align-items: center;
-    /* width: calc(100% - 20px); */
     width: 100%;
     flex-direction: column;
-    /* height: 100px; */
-    /* padding-left: 10px; */
     margin: 0 10px 10px 10px;
-
     border: 3px solid black;
     border-radius: 20px;
-    /* background-color: #b9b9b9; */
 }
 #title {
     padding: 10px;
@@ -63,87 +49,56 @@ body {
 }
 
 #text {
-    width: calc(
-        100% - 20px
-    ); /* Adjust width to account for left and right margins */
+    width: calc(100% - 20px);
     padding: 10px;
     margin: 10px;
-    box-sizing: border-box; /* Include padding and border in the width calculation */
+    box-sizing: border-box;
     border: 3px solid black;
     border-radius: 10px;
-    /* background-color: #cccccc; */
 }
 #sections {
-    /* Container takes full width */
     width: 100%;
-
-    /* Use CSS Grid */
     display: grid;
-
-    /* Spacing between grid items */
     gap: 10px;
-
     box-sizing: border-box;
-
-    /* Default: 3 columns on large screens */
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    /* Optional: add some top/bottom padding */
-    /* padding: 10px; */
-    /* margin: 10px; */
 }
 
 .section-container {
-    /* Remove any old flex-basis or max-width rules that forced a percentage */
-    /* For a uniform square shape: */
-    /* aspect-ratio: 1 / 1; */
-
-    /* Use the full width of each grid cell */
     width: 100%;
-
-    /* Center content within each square */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
-    /* Spacing & style */
     padding: 10px;
     border: 3px solid black;
     border-radius: 20px;
-    /* background-color: #b9b9b9; */
     box-sizing: border-box;
 }
 
 .section-title {
-    width: 100%; /* Take full width of the parent */
+    width: 100%;
     margin-top: 10px;
     margin-bottom: 20px;
-    text-align: center; /* Center align the text */
-    font-size: 1.5rem; /* Adjust font size for responsiveness */
+    text-align: center;
+    font-size: 1.5rem;
 }
 #image-container {
-    width: 100%; 
-    /* max-width: 300px; Set a maximum width */
-    aspect-ratio: 1; /* Ensure the container is a square */
-    padding: 0; /* Remove padding to align icon properly */
-    /* margin: 10px; */
-
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-
     border: 3px dashed black;
     border-radius: 20px;
-    /* background-color: #cccccc; */
-
     background-repeat: no-repeat;
     background-position: center;
-    background-size: cover; /* Adjust the image to fully cover the container */
+    background-size: cover;
 }
 #icon-image {
     width: 100%;
     height: 100%;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -158,21 +113,17 @@ body {
     display: none;
 }
 #image-remove-button {
-    width: 100%; /* Adjust to take full width of parent container */
-    max-width: 300px; /* Set a maximum width */
-    height: auto; /* Automatically adjust height based on content */
+    width: 100%;
+    max-width: 300px;
+    height: auto;
     margin-top: 10px;
     padding: 10px;
-
     display: flex;
     justify-content: center;
     align-items: center;
-
     border: 3px dashed black;
     border-radius: 10px;
-    /* background-color: #cccccc; */
-
-    font-size: 1rem; /* Default font size for better readability */
+    font-size: 1rem;
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s ease;
@@ -182,67 +133,69 @@ body {
     transition: transform 0.2s ease;
 }
 
-/* Hover and active states for better user feedback */
 .button:hover {
-    /* background-color: #d6d6d6; Slightly darker background */
-    transform: scale(1.05); /* Slight zoom-in effect */
+    transform: scale(1.05);
 }
 
 .button:active {
-    transform: scale(0.95); /* Slight press-down effect */
+    transform: scale(0.95);
 }
+
 #right-container {
     height: fit-content;
     display: flex;
     flex-direction: column;
     width: 40%;
-    /* background-color: #b9b9b9; */
     border-radius: 20px;
     padding: 10px;
     margin: 20px 20px 20px 0;
-    border: 3px solid black;
-    border-radius: 20px;
+    /* border: 3px solid black; */
+    /* border-radius: 20px; */
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+#logo-and-stuff {
+    width: 400px;
+    margin: 10px;
 }
 
 @media (max-width: 768px) {
     #container {
-        /* For smaller screens, stack the containers vertically */
         flex-direction: column;
     }
     #left-container {
-        width: 90%; /* Full width for smaller screens */
+        width: 90%;
         margin: 0;
     }
     #right-container {
-        width: 90%; /* Full width for smaller screens */
+        width: 90%;
         margin: 20px 0;
     }
     #container {
-        /* For smaller screens, stack the containers vertically */
         justify-content: center;
         align-items: center;
     }
+    #logo-and-stuff {
+        width: 400px;
+    }
 }
 #options-container {
-    /* width: 100%; */
-    /* padding: 20px 0 20px 0; */
-
-    /* height: 80px; */
     display: flex;
 }
 #save-buttons {
-    /* margin: 20px 20px 20px 0; */
     padding: 10px 0 10px 0;
-
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
-
     border: 3px solid black;
     border-radius: 20px;
-    /* background-color: #cccccc; */
-
     font-size: large;
 }
 #save-buttons .button {
@@ -252,15 +205,12 @@ body {
     width: 2em;
     height: 2em;
     padding: 10px;
-
     display: flex;
     justify-content: center;
     align-items: center;
     flex: 1;
-
     border: 3px dashed black;
     border-radius: 3px;
-
     font-size: large;
 }
 #logo-container {
@@ -270,35 +220,25 @@ body {
     flex-direction: column;
     width: 100%;
     margin: 10px;
-
-    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
-    /* background-color: #b9b9b9; */
 }
 #rotation-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
-
     width: 100%;
-    /* margin: 10px; */
     padding: 20px 0;
-
     border: 3px solid black;
     border-radius: 20px;
-    /* background-color: #b9b9b9; */
 }
 #size-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: row;
-
     width: 100%;
     margin: 10px;
-
-    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     background-color: #b9b9b9;
 }
@@ -306,17 +246,11 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* height: 100%;
-    width: 100%; */
     overflow: hidden;
     aspect-ratio: 1;
-
-    /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
-    /* background-color: #b9b9b9; */
 }
 footer {
     text-align: center;
-    /* optionally margin-top: auto; if you ever need a forced push-down */
     margin-top: auto;
 }

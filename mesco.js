@@ -1,6 +1,7 @@
 const label = document.querySelector("#icon-image");
 const input = document.querySelector("#bg-image");
 
+
 input.addEventListener("change", updateImageDisplay);
 
 function updateImageDisplay() {
@@ -28,4 +29,5 @@ const fileTypes = [
 function validFileType(file) {
     return fileTypes.includes(file.type);
 }
+
 
