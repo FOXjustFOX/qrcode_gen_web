@@ -5,6 +5,7 @@ html {
     width: 100%;
     height: 100%;
     min-height: 100vh; /* Instead of fixed 100% */
+    min-width: 500px;
 
     overflow-x: hidden; /* Prevent unwanted scrollbars */
     overflow-y: auto;
@@ -16,20 +17,26 @@ html {
 }
 #container {
     display: flex;
-    flex-wrap: wrap; /* Allow containers to wrap */
+    /* flex-wrap: wrap; Allow containers to wrap */
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
     height: 100%;
     min-height: 100vh; /* Ensure full height */
+    flex-direction: row;
 }
-
 
 #left-container {
     display: flex;
+    height: fit-content;
     flex-direction: column;
     width: 60%;
     align-items: center;
+    margin: 20px;
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 10px;
+
 }
 .disabled {
     pointer-events: none;
@@ -38,16 +45,18 @@ html {
 #title-container {
     display: flex;
     /* justify-content: left; */
+    box-sizing: border-box;
     align-items: center;
-    width: 90%;
+    /* width: calc(100% - 20px); */
+    width: 100%;
     flex-direction: column;
     /* height: 100px; */
-    margin: 10px;
     /* padding-left: 10px; */
+    margin: 0 10px 10px 10px;
 
-    /* border: 1px solid black; */
+    border: 3px solid black;
     border-radius: 20px;
-    background-color: #b9b9b9;
+    /* background-color: #b9b9b9; */
 }
 #title {
     padding: 10px;
@@ -61,33 +70,33 @@ html {
     padding: 10px;
     margin: 10px;
     box-sizing: border-box; /* Include padding and border in the width calculation */
-    border: 0px solid black;
+    border: 3px solid black;
     border-radius: 10px;
-    background-color: #cccccc;
+    /* background-color: #cccccc; */
 }
 #sections {
     /* Container takes full width */
-    width: 90%;
+    /* width: 90%; */
 
     /* Use CSS Grid */
     display: grid;
 
     /* Spacing between grid items */
-    gap: 20px;
+    gap: 10px;
 
     box-sizing: border-box;
 
     /* Default: 3 columns on large screens */
     grid-template-columns: repeat(2, minmax(0, 1fr));
     /* Optional: add some top/bottom padding */
-    padding: 10px;
+    /* padding: 10px; */
+    /* margin: 10px; */
 }
-
 
 .section-container {
     /* Remove any old flex-basis or max-width rules that forced a percentage */
     /* For a uniform square shape: */
-    aspect-ratio: 1 / 1;
+    /* aspect-ratio: 1 / 1; */
 
     /* Use the full width of each grid cell */
     width: 100%;
@@ -100,8 +109,9 @@ html {
 
     /* Spacing & style */
     padding: 10px;
+    border: 3px solid black;
     border-radius: 20px;
-    background-color: #b9b9b9;
+    /* background-color: #b9b9b9; */
     box-sizing: border-box;
 }
 
@@ -113,18 +123,19 @@ html {
     font-size: 1.5rem; /* Adjust font size for responsiveness */
 }
 #image-container {
-    width: 100%; /* Take full width of the parent */
-    max-width: 300px; /* Set a maximum width */
+    width: 100%; 
+    /* max-width: 300px; Set a maximum width */
     aspect-ratio: 1; /* Ensure the container is a square */
     padding: 0; /* Remove padding to align icon properly */
+    /* margin: 10px; */
 
     display: flex;
     justify-content: center;
     align-items: center;
 
     border: 3px dashed black;
-    border-radius: 3px;
-    background-color: #cccccc;
+    border-radius: 20px;
+    /* background-color: #cccccc; */
 
     background-repeat: no-repeat;
     background-position: center;
@@ -160,12 +171,16 @@ html {
 
     border: 3px dashed black;
     border-radius: 10px;
-    background-color: #cccccc;
+    /* background-color: #cccccc; */
 
     font-size: 1rem; /* Default font size for better readability */
     text-align: center;
     cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease;
+}
+
+.button {
+    transition: transform 0.2s ease;
 }
 
 /* Hover and active states for better user feedback */
@@ -178,10 +193,16 @@ html {
     transform: scale(0.95); /* Slight press-down effect */
 }
 #right-container {
+    height: fit-content;
     display: flex;
     flex-direction: column;
     width: 40%;
-    
+    /* background-color: #b9b9b9; */
+    border-radius: 20px;
+    padding: 10px;
+    margin: 20px 20px 20px 0;
+    border: 3px solid black;
+    border-radius: 20px;
 }
 
 @media (max-width: 768px) {
@@ -189,36 +210,39 @@ html {
         /* For smaller screens, stack the containers vertically */
         flex-direction: column;
     }
-    #left-container, #right-container {
+    #left-container {
         width: 90%; /* Full width for smaller screens */
-
+        margin: 0;
+    }
+    #right-container {
+        width: 90%; /* Full width for smaller screens */
+        margin: 20px 0;
     }
     #container {
         /* For smaller screens, stack the containers vertically */
         justify-content: center;
         align-items: center;
     }
-
 }
 #options-container {
-    width: 100%;
-    padding-top: 20px;
+    /* width: 100%; */
+    /* padding: 20px 0 20px 0; */
 
-    height: 80px;
+    /* height: 80px; */
     display: flex;
 }
 #save-buttons {
-    width: 100%;
-    margin: 20px 0 20px 0;
-    padding: 20px 0 20px 0;
+    /* margin: 20px 20px 20px 0; */
+    padding: 10px 0 10px 0;
 
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
 
-    border-radius: 3px;
-    background-color: #cccccc;
+    border: 3px solid black;
+    border-radius: 20px;
+    /* background-color: #cccccc; */
 
     font-size: large;
 }
@@ -228,7 +252,6 @@ html {
 .save-button {
     width: 2em;
     height: 2em;
-    /* margin: 10px; */
     padding: 10px;
 
     display: flex;
@@ -238,7 +261,6 @@ html {
 
     border: 3px dashed black;
     border-radius: 3px;
-    background-color: #cccccc;
 
     font-size: large;
 }
@@ -252,7 +274,7 @@ html {
 
     /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
-    background-color: #b9b9b9;
+    /* background-color: #b9b9b9; */
 }
 #rotation-container {
     display: flex;
@@ -261,11 +283,12 @@ html {
     flex-direction: row;
 
     width: 100%;
-    margin: 10px;
+    /* margin: 10px; */
+    padding: 20px 0;
 
-    /* border: 1px solid #b6b6b6; */
+    border: 3px solid black;
     border-radius: 20px;
-    background-color: #b9b9b9;
+    /* background-color: #b9b9b9; */
 }
 #size-container {
     display: flex;
@@ -291,5 +314,5 @@ html {
 
     /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
-    background-color: #b9b9b9;
+    /* background-color: #b9b9b9; */
 }
