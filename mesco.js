@@ -28,3 +28,4 @@ const fileTypes = [
 function validFileType(file) {
     return fileTypes.includes(file.type);
 }
+

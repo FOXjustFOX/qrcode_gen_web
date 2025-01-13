@@ -10,6 +10,8 @@
 /** Text input field for the QR code content */
 const textInput = document.getElementById("text");
 
+const qrContainer = document.getElementById("qr-container");
+
 /** Main <canvas> element where the final QR (rotated, etc.) is displayed */
 const qrCanvas = document.getElementById("canvas");
 
@@ -24,27 +26,35 @@ const qrbg = document.getElementById("bg");
 
 /** Button to download the generated QR code as PNG */
 const downloadBtn = document.getElementById("downloadBtn");
+const downloadBtnImg = document.getElementById("download-button-img");
 
 /** Button to copy the QR code image to clipboard */
 const copyBtn = document.getElementById("copyBtn");
+const copyBtnImg = document.getElementById("copy-button-img");
 
 /** The base dimension for the QR code, unscaled */
-const qrSize = 300;
+let qrSize;
+
+let displaySize;
 
 /** Path to the SVG logo that can be placed in the center of the QR */
 const logoSrc = "WRSS_WIT_Logo.svg";
 
 /** Logo dimension relative to the QR code size */
-let logoSize = qrSize * 0.2;
+let logoSize;
+
+let usableSize;
+
+let scale;
 
 /** Factor by which we create a larger offscreen canvas (for sharper rendering) */
 const offscreenScale = 3;
 
 /** The scaled (actual) size for the logo in the offscreen canvas */
-const scaledLogoSize = logoSize * offscreenScale;
+let scaledLogoSize;
 
 /** Safe zone around the logo, so modules in that area are skipped */
-const scaledSafeZone = scaledLogoSize * 1.1;
+let scaledSafeZone;
 
 /** Each QR cell’s dimension is computed from (usableSize / modules.size) */
 let cellSize;
@@ -109,20 +119,31 @@ function adjustCanvasForHighDPI(canvas, width, height) {
  * Hide or show background color and image inputs based on whether
  * "transparent background" is checked.
  */
-function updateBackgroundColorLabel() {
-    if (transparentBg.checked) {
-        // Hide the color picker and BG image input
-        bgColorInput.style.display = "none";
-        bgImageInput.style.display = "none";
+function resizeCanvasToContainer() {
+    qrSize = qrContainer.offsetWidth*Math.sqrt(2)/2;
+    displaySize = qrContainer.offsetWidth;
+    logoSize = qrSize * 0.2;
+    scaledLogoSize = logoSize * offscreenScale;
+    usableSize = (qrSize - 2 * 20) * offscreenScale;
+    scaledSafeZone = scaledLogoSize * 1.1
 
-        // Reset background image
-        bgImageInput.value = "";
-        backgroundImageSrc = null;
-        removeBgImageBtn.style.display = "none";
+    generateQR();
+}
+
+function toggleDisabled() {
+    const disabled =
+        imageContainer.classList.contains("disabled") &&
+        bgColorInput.classList.contains("disabled") &&
+        removeBgImageBtn.classList.contains("disabled");
+
+    if (disabled) {
+        imageContainer.classList.remove("disabled");
+        bgColorInput.classList.remove("disabled");
+        removeBgImageBtn.classList.remove("disabled");
     } else {
-        // Show them again
-        bgColorInput.style.display = "";
-        bgImageInput.style.display = "";
+        imageContainer.classList.add("disabled");
+        bgColorInput.classList.add("disabled");
+        removeBgImageBtn.classList.add("disabled");
     }
 }
 
@@ -161,7 +182,6 @@ async function generateQR() {
     const bgColor = bgColorInput.value;
 
     // The display size for the main canvas (where we apply rotation, etc.)
-    const displaySize = 640;
 
     // If no text, clear the canvas and hide the download/copy buttons
     if (!text) {
@@ -182,13 +202,14 @@ async function generateQR() {
     offscreenCanvas.width = qrSize * offscreenScale; // e.g., 900
     offscreenCanvas.height = qrSize * offscreenScale; // e.g., 900
     const offscreenCtx = offscreenCanvas.getContext("2d");
+    
+    // 3) Determine user-chosen rotation
+    const rotationDegrees = parseFloat(rotationRange.value) || 0;
 
     // 2) Draw the entire QR code (modules + optional BG + optional logo)
     //    onto the offscreen context
     await drawQrToCtx(offscreenCtx, text, qrColor, bgColor);
 
-    // 3) Determine user-chosen rotation
-    const rotationDegrees = parseFloat(rotationRange.value) || 0;
 
     // 4) Prepare the main canvas
     const mainCtx = adjustCanvasForHighDPI(qrCanvas, displaySize, displaySize);
@@ -196,23 +217,45 @@ async function generateQR() {
 
     // 5) Apply the rotation transform and draw the offscreen canvas
     mainCtx.save();
+
+    // Center the rotation transform
     mainCtx.translate(displaySize / 2, displaySize / 2);
     mainCtx.rotate((rotationDegrees * Math.PI) / 180);
 
-    // Here, we're drawing a 450×450 sub-region from the 900×900 QR
-    // so it fits nicely in the 640×640 main canvas, centered.
+    // Scale the drawing to ensure the sub-region fits within the main canvas
+    // const scale = displaySize / 900; // Scale factor to fit 900x900 into the canvas
+    // boundingBoxSize is how “big” that rotated 900×900 appears
+
+    const sqrt2 = Math.SQRT2; // ≈ 1.414
+
+    // Scale so that boundingBoxSize fits into displaySize
+    const scale = displaySize / (900*sqrt2); // Scale factor to fit 900x900 into the canvas
+    
+    mainCtx.scale(scale, scale);
+
+    // Adjust the position of the sub-region to center it on the canvas
+    const offsetX = -900 / 2; // Center of the 900x900 region
+    const offsetY = -900 / 2;
+
+    console.log({
+        qrSize,
+        displaySize,
+        offsetWidth: qrContainer.offsetWidth,
+        scale: displaySize / 900,
+      });
+
+    // Draw the sub-region of the offscreen canvas
     mainCtx.drawImage(
         offscreenCanvas,
-        -450 / 2, // -225
-        -450 / 2, // -225
-        450,
-        450
+        offsetX,
+        offsetY,
+        900, // Full width of the offscreen canvas
+        900 // Full height of the offscreen canvas
     );
+
     mainCtx.restore();
 
     // 6) Show the download/copy buttons
-    downloadBtn.innerText = "Download QR Code";
-    copyBtn.innerText = "Copy QR Code to clipboard";
 
     downloadBtn.style.display = "block";
     copyBtn.style.display = "block";
@@ -378,38 +421,59 @@ async function drawSvgToCanvas(
     height,
     bgColor,
     qrColor
-) {
+  ) {
     const response = await fetch(svgPath);
     let svgText = await response.text();
-
-    // If not transparent and no image, we insert a <rect> as a background
+  
+    // Insert a rect if not transparent (unchanged from your code)
     if (!transparentBg.checked && !backgroundImageSrc) {
-        svgText = svgText.replace(
-            /<svg([^>]*)>/,
-            `<svg$1><rect width="100%" height="100%" fill="${bgColor}" />`
-        );
+      svgText = svgText.replace(
+        /<svg([^>]*)>/,
+        `<svg$1><rect width="100%" height="100%" fill="${bgColor}" />`
+      );
     }
-
-    // Recolor any stroke to match the QR code color
+  
+    // Recolor strokes (unchanged)
     svgText = svgText.replace(/stroke="[^"]*"/g, `stroke="${qrColor}"`);
-
+  
     const svgBlob = new Blob([svgText], { type: "image/svg+xml" });
     const url = URL.createObjectURL(svgBlob);
-
+  
     const img = new Image();
     return new Promise((resolve, reject) => {
-        img.onload = () => {
-            const ctx = canvas.getContext("2d");
-            const imgX = centerX - width / 2;
-            const imgY = centerY - height / 2;
-            ctx.drawImage(img, imgX, imgY, width, height);
-            URL.revokeObjectURL(url);
-            resolve();
-        };
-        img.onerror = reject;
-        img.src = url;
+      img.onload = () => {
+        const ctx = canvas.getContext("2d");
+  
+        ctx.save(); // Always call save() before applying transforms
+  
+        // 1) Move origin to the center where we want the logo
+        ctx.translate(centerX, centerY);
+  
+        // 2) If your QR is rotated by some angle, rotate the logo “back” 
+        //    to keep it horizontal
+        const rotationDegrees = parseFloat(rotationRange.value) || 0;
+        ctx.rotate((-rotationDegrees * Math.PI) / 180);
+  
+        // 3) Begin clipping path: a circle with radius = width/2
+        ctx.beginPath();
+        ctx.arc(0, 0, width / 2, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.clip();
+  
+        // 4) Draw the logo so that (0,0) is its center
+        //    i.e., top-left corner is at (-width/2, -height/2)
+        ctx.drawImage(img, -width / 2, -height / 2, width, height);
+  
+        // 5) Restore context to remove the clipping region
+        ctx.restore();
+  
+        URL.revokeObjectURL(url);
+        resolve();
+      };
+      img.onerror = reject;
+      img.src = url;
     });
-}
+  }
 
 // --------------------------------------------------------------------
 // 9. DOWNLOAD / COPY LOGIC
@@ -425,7 +489,8 @@ function downloadQRCode() {
     link.click();
 
     // Optionally change the button text to indicate success
-    downloadBtn.innerText = "Downloaded!";
+    downloadBtnImg.src = "done.png";
+    // downloadBtn.innerText = "Downloaded!";
 }
 
 /**
@@ -438,7 +503,8 @@ function copyQrToClipboard() {
         navigator.clipboard.write([item]);
     });
     // Indicate success
-    copyBtn.innerText = "Copied!";
+    copyBtnImg.src = "done.png";
+    // copyBtn.innerText = "Copied!";
 }
 
 // --------------------------------------------------------------------
@@ -453,12 +519,17 @@ qrColorInput.addEventListener("input", generateQR);
 bgColorInput.addEventListener("input", generateQR);
 
 // Download + Copy
-downloadBtn.addEventListener("click", downloadQRCode);
-copyBtn.addEventListener("click", copyQrToClipboard);
-
+downloadBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    downloadQRCode();
+});
+copyBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    copyQrToClipboard();
+});
 // Toggle transparent background
 transparentBg.addEventListener("change", () => {
-    updateBackgroundColorLabel();
+    toggleDisabled();
     generateQR();
 });
 
@@ -521,6 +592,8 @@ function updateDivBackgroundColor() {
     qrCanvas.style.backgroundColor = bgColorInput.value;
 }
 
+window.addEventListener("resize", resizeCanvasToContainer);
+
 // Initial calls on page load
+resizeCanvasToContainer();
 generateQR();
-updateBackgroundColorLabel();

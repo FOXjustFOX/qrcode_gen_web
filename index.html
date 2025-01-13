@@ -26,22 +26,25 @@
                         <div class="section-container">
                             <p class="section-title">Kolor kodu QR:</p>
                             <input type="color" id="qrColor" />
+                            <div id="logo-container">
+                                <p class="section-title">Include Logo</p>
+                                <input
+                                    type="checkbox"
+                                    id="includeLogo"
+                                    checked />
+                            </div>
                         </div>
                         <div class="section-container">
                             <p class="section-title">Kolor tła:</p>
-                            <label for="transparentBg"
-                                >Transparent Background?</label
-                            >
-                            <input type="checkbox" id="transparentBg" />
                             <input type="color" id="bgColor" value="#ffffff" />
+
+                            <p class="section-title">Transparent Background?</p>
+                            <input type="checkbox" id="transparentBg" />
                         </div>
                         <div class="section-container">
                             <p class="section-title">Grafika:</p>
                             <div id="image-container">
-                                <label
-                                    for="bg-image"
-                                    id="icon-image"
-                                    class="button"
+                                <label for="bg-image" id="icon-image"
                                     ><img
                                         src="Group.png"
                                         id="add-image-icon"
@@ -54,6 +57,7 @@
                             </div>
                             <button
                                 id="image-remove-button"
+                                class="button"
                                 style="display: none">
                                 <p>Usuń zdjęcie tła</p>
                             </button>
@@ -62,9 +66,22 @@
                 </div>
                 <div id="right-container">
                     <div id="options-container">
-                        <div id="logo-container">
-                            <label for="includeLogo">Include Logo</label>
-                            <input type="checkbox" id="includeLogo" checked />
+                        <div id="size-container">
+                            <label for="sizeRange">Size: </label>
+                            <div id="size-div">
+                                <input
+                                    type="range"
+                                    id="sizeRange"
+                                    min="100"
+                                    max="1000"
+                                    value="250" />
+                                <input
+                                    id="sizeValue"
+                                    type="number"
+                                    min="100"
+                                    max="1000"
+                                    value="250" />
+                            </div>
                         </div>
                         <div id="rotation-container">
                             <div id="qr-rotation">
@@ -88,11 +105,28 @@
                     </div>
                     <div id="qr-container">
                         <canvas id="canvas"></canvas>
-                        <button id="downloadBtn" style="display: none">
-                            Download QR Code
+                    </div>
+                    <div id="save-buttons">
+                        <button
+                            id="downloadBtn"
+                            class="button"
+                            style="display: none">
+                            <img
+                                class="save-button"
+                                id="download-button-img"
+                                src="download.png"
+                                alt="download button" />
                         </button>
-                        <button id="copyBtn" style="display: none">
-                            Copy QR Code to clipboard
+
+                        <button
+                            id="copyBtn"
+                            class="button"
+                            style="display: none">
+                            <img
+                                class="save-button"
+                                id="copy-button-img"
+                                src="copy.png"
+                                alt="copy button" />
                         </button>
                     </div>
                 </div>
