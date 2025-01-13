@@ -121,7 +121,7 @@ function adjustCanvasForHighDPI(canvas, width, height) {
  */
 function resizeCanvasToContainer() {
     qrSize = qrContainer.offsetWidth*Math.sqrt(2)/2;
-    displaySize = qrContainer.offsetWidth;
+    displaySize = qrContainer.offsetWidth ;
     logoSize = qrSize * 0.2;
     scaledLogoSize = logoSize * offscreenScale;
     usableSize = (qrSize - 2 * 20) * offscreenScale;

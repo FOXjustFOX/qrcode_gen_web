@@ -1,40 +1,35 @@
-body, html {
+body,
+html {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Prevent unwanted scrollbars */
+    min-height: 100vh; /* Instead of fixed 100% */
+
+    overflow-x: hidden; /* Prevent unwanted scrollbars */
+    overflow-y: auto;
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
+    flex-direction: column;
     box-sizing: border-box;
 }
 #container {
     display: flex;
     flex-wrap: wrap; /* Allow containers to wrap */
-    justify-content: center;
+    justify-content: space-between;
     align-items: stretch;
     width: 100%;
     height: 100%;
-}
-#left-container, #right-container {
-    flex: 1 1 100%; /* Set to full width on smaller screens */
-    max-width: 50%; /* Default to 50% width */
-    justify-content: space-between;
-    box-sizing: border-box;
-    padding: 10px;
+    min-height: 100vh; /* Ensure full height */
 }
 
-@media (max-width: 768px) {
-    #left-container, #right-container {
-        max-width: 100%; /* Full width for smaller screens */
-    }
-}
 
 #left-container {
     display: flex;
     flex-direction: column;
     width: 60%;
+    align-items: center;
 }
 .disabled {
     pointer-events: none;
@@ -42,12 +37,12 @@ body, html {
 }
 #title-container {
     display: flex;
-    justify-content: left;
+    /* justify-content: left; */
     align-items: center;
     width: 90%;
     flex-direction: column;
     /* height: 100px; */
-    margin: 20px;
+    margin: 10px;
     /* padding-left: 10px; */
 
     /* border: 1px solid black; */
@@ -60,7 +55,9 @@ body, html {
 }
 
 #text {
-    width: calc(100% - 20px); /* Adjust width to account for left and right margins */
+    width: calc(
+        100% - 20px
+    ); /* Adjust width to account for left and right margins */
     padding: 10px;
     margin: 10px;
     box-sizing: border-box; /* Include padding and border in the width calculation */
@@ -69,43 +66,45 @@ body, html {
     background-color: #cccccc;
 }
 #sections {
-    width: 100%; /* Make the container take full width */
-    display: flex;
-    flex-wrap: wrap; /* Allow child elements to wrap */
-    justify-content: center; /* Center align items */
-    gap: 20px; /* Add spacing between elements */
+    /* Container takes full width */
+    width: 90%;
+
+    /* Use CSS Grid */
+    display: grid;
+
+    /* Spacing between grid items */
+    gap: 20px;
+
+    box-sizing: border-box;
+
+    /* Default: 3 columns on large screens */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    /* Optional: add some top/bottom padding */
+    padding: 10px;
 }
+
 
 .section-container {
-    flex: 1 1 calc(33.33% - 40px); /* Three columns layout with gap adjustment */
-    max-width: calc(33.33% - 40px); /* Ensure max width matches flex basis */
-    height: auto; /* Allow height to adjust based on content */
-    margin: 10px; /* Add margin for spacing */
-    padding: 10px;
+    /* Remove any old flex-basis or max-width rules that forced a percentage */
+    /* For a uniform square shape: */
+    aspect-ratio: 1 / 1;
 
+    /* Use the full width of each grid cell */
+    width: 100%;
+
+    /* Center content within each square */
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
 
+    /* Spacing & style */
+    padding: 10px;
     border-radius: 20px;
     background-color: #b9b9b9;
+    box-sizing: border-box;
 }
 
-/* Adjust layout for smaller screens */
-@media (max-width: 1024px) {
-    .section-container {
-        flex: 1 1 calc(50% - 40px); /* Two columns layout */
-        max-width: calc(50% - 40px);
-    }
-}
-
-/* Adjust layout for very small screens */
-@media (max-width: 768px) {
-    .section-container {
-        flex: 1 1 calc(100% - 20px); /* Single column layout */
-        max-width: calc(100% - 20px);
-    }
-}
 .section-title {
     width: 100%; /* Take full width of the parent */
     margin-top: 10px;
@@ -140,8 +139,7 @@ body, html {
     align-items: center;
 }
 
-
-#add-image-icon{
+#add-image-icon {
     width: 25%;
     height: 25%;
 }
@@ -183,6 +181,24 @@ body, html {
     display: flex;
     flex-direction: column;
     width: 40%;
+    
+}
+
+@media (max-width: 768px) {
+    #container {
+        /* For smaller screens, stack the containers vertically */
+        flex-direction: column;
+    }
+    #left-container, #right-container {
+        width: 90%; /* Full width for smaller screens */
+
+    }
+    #container {
+        /* For smaller screens, stack the containers vertically */
+        justify-content: center;
+        align-items: center;
+    }
+
 }
 #options-container {
     width: 100%;
@@ -268,16 +284,12 @@ body, html {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
-    width: 100%;
+    /* height: 100%;
+    width: 100%; */
     overflow: hidden;
     aspect-ratio: 1;
 
     /* border: 1px solid #b6b6b6; */
     border-radius: 20px;
     background-color: #b9b9b9;
-}
-canvas {
-    /* max-width: 100%; */
-    
 }
