@@ -12,22 +12,21 @@
         <form>
             <div id="container">
                 <div id="left-container">
-                    <div id="title-container" >
+                    <div id="title-container">
                         <p id="title">
-                            Tu wpisz adres URL, który przekieruje ten kod
-                            QR:
+                            Tu wpisz adres URL, który przekieruje ten kod QR:
                         </p>
                         <input
-                        type="text"
-                        id="text"
-                        placeholder="Np. https://www.facebook.com/samorzad.wita" />
+                            type="text"
+                            id="text"
+                            placeholder="Np. https://www.facebook.com/samorzad.wita" />
                     </div>
                     <div id="sections">
                         <div class="section-container">
                             <p class="section-title">Kolor kodu QR:</p>
                             <input type="color" id="qrColor" />
                             <div id="logo-container">
-                                <p class="section-title">Include Logo</p>
+                                <p class="section-title">Z logiem WRSS-u?</p>
                                 <input
                                     type="checkbox"
                                     id="includeLogo"
@@ -38,7 +37,7 @@
                             <p class="section-title">Kolor tła:</p>
                             <input type="color" id="bgColor" value="#ffffff" />
 
-                            <p class="section-title">Transparent Background?</p>
+                            <p class="section-title">Przeźroczyste tło?</p>
                             <input type="checkbox" id="transparentBg" />
                         </div>
                         <div class="section-container">
@@ -85,7 +84,7 @@
                         </div> -->
                         <div id="rotation-container">
                             <div id="qr-rotation">
-                                <label for="rotationRange">Rotation: </label>
+                                <label for="rotationRange">Obrót: </label>
                                 <div id="rotation-div">
                                     <input
                                         type="range"
@@ -106,11 +105,11 @@
                     <div id="qr-container">
                         <canvas id="canvas"></canvas>
                     </div>
-                    <div id="save-buttons">
+                    <div id="save-buttons" style="display: none">
                         <button
                             id="downloadBtn"
                             class="button"
-                            style="display: none">
+                            >
                             <img
                                 class="save-button"
                                 id="download-button-img"
@@ -121,7 +120,7 @@
                         <button
                             id="copyBtn"
                             class="button"
-                            style="display: none">
+                            >
                             <img
                                 class="save-button"
                                 id="copy-button-img"
@@ -132,6 +131,13 @@
                 </div>
             </div>
         </form>
+        <footer>
+            <p>
+                Made with ❤️ by
+                <a href="https://github.com/FOXjustFOX"> Igor Lis </a>
+            </p>
+        </footer>
+
         <script src="script.js"></script>
         <script src="mesco.js"></script>
     </body>

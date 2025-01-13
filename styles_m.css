@@ -76,7 +76,7 @@ html {
 }
 #sections {
     /* Container takes full width */
-    /* width: 90%; */
+    width: 100%;
 
     /* Use CSS Grid */
     display: grid;

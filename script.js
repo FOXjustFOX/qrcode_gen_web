@@ -32,6 +32,8 @@ const downloadBtnImg = document.getElementById("download-button-img");
 const copyBtn = document.getElementById("copyBtn");
 const copyBtnImg = document.getElementById("copy-button-img");
 
+const saveBtns = document.getElementById("save-buttons");
+
 /** The base dimension for the QR code, unscaled */
 let qrSize;
 
@@ -192,8 +194,8 @@ async function generateQR() {
         );
         mainCtx.clearRect(0, 0, displaySize, displaySize);
 
-        downloadBtn.style.display = "none";
-        copyBtn.style.display = "none";
+        saveBtns.style.display = "none";
+        
         return;
     }
 
@@ -257,8 +259,8 @@ async function generateQR() {
 
     // 6) Show the download/copy buttons
 
-    downloadBtn.style.display = "block";
-    copyBtn.style.display = "block";
+    saveBtns.style.display = "flex";
+    
 }
 
 // --------------------------------------------------------------------
