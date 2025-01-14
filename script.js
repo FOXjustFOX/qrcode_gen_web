@@ -71,7 +71,7 @@ const rotationRange = document.getElementById("rotationRange");
 const rotationValueDisplay = document.getElementById("rotationValue");
 
 /** Path to the SVG logo that can be placed in the center of the QR. */
-const logoSrc = "WRSS_WIT_Logo.svg";
+const logoSrc = "images/logo/WRSS_WIT_Logo.svg";
 
 /** Margin around the QR code in the offscreen canvas (in px). */
 const margin = 20;
@@ -199,8 +199,8 @@ function generateQRDebounced() {
  */
 async function generateQR() {
     // Reset the "save" button icons to their default images
-    downloadBtnImg.src = "download.png";
-    copyBtnImg.src = "copy.png";
+    downloadBtnImg.src = "images/download.png";
+    copyBtnImg.src = "images/copy.png";
 
     // Gather current user inputs
     const text = textInput.value.trim();
@@ -476,7 +476,7 @@ function downloadQRCode() {
     link.click();
 
     // Indicate success (swap icon)
-    downloadBtnImg.src = "done.png";
+    downloadBtnImg.src = "images/done.png";
 }
 
 /**
@@ -489,7 +489,7 @@ function copyQrToClipboard() {
     });
 
     // Indicate success (swap icon)
-    copyBtnImg.src = "done.png";
+    copyBtnImg.src = "images/done.png";
 }
 
 // --------------------------------------------------------------------
