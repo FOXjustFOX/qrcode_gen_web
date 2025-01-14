@@ -186,6 +186,12 @@ function generateQRDebounced() {
  * Draws the result onto the main canvas with the chosen rotation.
  */
 async function generateQR() {
+
+    // Reset the "save" button icons
+    downloadBtnImg.src = "download.png";
+    copyBtnImg.src = "copy.png";
+    
+    // Get the current user inputs
     const text = textInput.value.trim();
     const qrColor = qrColorInput.value;
     const bgColor = bgColorInput.value;

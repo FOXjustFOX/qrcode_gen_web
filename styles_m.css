@@ -141,6 +141,15 @@ body {
     transform: scale(0.95);
 }
 
+
+input.button:hover {
+    transform: scale(1.3);
+}
+
+input.button:active {
+    transform: scale(0.9);
+}
+
 #right-container {
     height: fit-content;
     display: flex;
