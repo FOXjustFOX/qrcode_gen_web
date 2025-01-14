@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
         <link rel="stylesheet" href="styles.css" />
-        <link rel="stylesheet" href="styles_m.css" />
         <title>QR Code Generator</title>
     </head>
     <body>
@@ -45,7 +44,10 @@
                             <input type="color" id="bgColor" value="#ffffff" />
 
                             <p class="section-title">Przeźroczyste tło?</p>
-                            <input type="checkbox" id="transparentBg" class="button" />
+                            <input
+                                type="checkbox"
+                                id="transparentBg"
+                                class="button" />
                         </div>
                         <div class="section-container">
                             <p class="section-title">Grafika:</p>
@@ -75,23 +77,6 @@
                 </div>
                 <div id="right-container">
                     <div id="options-container">
-                        <!-- <div id="size-container">
-                            <label for="sizeRange">Size: </label>
-                            <div id="size-div">
-                                <input
-                                    type="range"
-                                    id="sizeRange"
-                                    min="100"
-                                    max="1000"
-                                    value="250" />
-                                <input
-                                    id="sizeValue"
-                                    type="number"
-                                    min="100"
-                                    max="1000"
-                                    value="250" />
-                            </div>
-                        </div> -->
                         <div id="rotation-container">
                             <div id="qr-rotation">
                                 <label for="rotationRange">Obrót: </label>
@@ -143,6 +128,5 @@
         </footer>
 
         <script src="script.js"></script>
-        <script src="mesco.js"></script>
     </body>
 </html>
