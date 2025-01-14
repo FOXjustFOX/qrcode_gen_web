@@ -140,19 +140,19 @@ function resizeCanvasToContainer() {
  * manipulate other styles in your own UI.
  */
 function toggleDisabled() {
-    const disabled =
-        imageContainer.classList.contains("disabled") &&
-        bgColorInput.classList.contains("disabled") &&
-        removeBgImageBtn.classList.contains("disabled");
 
-    if (disabled) {
+    if (transparentBg.checked) {
+        bgColorInput.classList.add("disabled");
+        imageContainer.classList.add("disabled");
+        removeBgImageBtn.classList.add("disabled");
+    }else if (backgroundImageSrc) {
+        bgColorInput.classList.add("disabled");
         imageContainer.classList.remove("disabled");
-        bgColorInput.classList.remove("disabled");
         removeBgImageBtn.classList.remove("disabled");
     } else {
-        imageContainer.classList.add("disabled");
-        bgColorInput.classList.add("disabled");
-        removeBgImageBtn.classList.add("disabled");
+        bgColorInput.classList.remove("disabled");
+        imageContainer.classList.remove("disabled");
+        removeBgImageBtn.classList.remove("disabled");
     }
 }
 
@@ -531,6 +531,7 @@ rotationValueDisplay.addEventListener("input", () => {
 // Background image file input
 bgImageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
+    toggleDisabled();
     if (!file) {
         removeBgImageBtn.style.display = "none";
         return;
