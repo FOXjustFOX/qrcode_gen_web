@@ -525,7 +525,8 @@ includeLogoCheckbox.addEventListener("change", () => {
 });
 
 // 10.6 Rotation range slider
-rotationRange.addEventListener("input", () => {
+rotationRange.addEventListener("input", (e) => {
+    e.preventDefault();
     rotationValueDisplay.value = rotationRange.value;
     generateQR();
 });
@@ -534,6 +535,12 @@ rotationRange.addEventListener("input", () => {
 rotationValueDisplay.addEventListener("input", () => {
     rotationRange.value = rotationValueDisplay.value;
     generateQR();
+});
+
+rotationValueDisplay.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault(); // Prevent any action for Enter key
+    }
 });
 
 // 10.8 Background image file input
