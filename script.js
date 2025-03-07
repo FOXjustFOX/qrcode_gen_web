@@ -58,6 +58,10 @@ const includeLogoCheckbox = document.getElementById("includeLogo");
 /** @type {HTMLInputElement} */
 const bgImageInput = document.getElementById("bg-image");
 
+const logoImageInput = document.getElementById("logo-image");
+
+let customLogoSrc = null;
+
 /** @type {HTMLDivElement} */
 const imageContainer = document.getElementById("image-container");
 /** @type {HTMLDivElement} */
@@ -344,6 +348,8 @@ async function drawQrToCtx(ctx, text, qrColor, bgColor) {
     if (includeLogoCheckbox.checked) {
         const centerX = marginPx + usableSize / 2;
         const centerY = marginPx + usableSize / 2;
+
+        const logoToUse = customLogoSrc ? customLogoSrc : logoSrc;
         await drawSvgToCanvas(
             logoSrc,
             ctx.canvas,
@@ -564,6 +570,20 @@ bgImageInput.addEventListener("change", (e) => {
         generateQR();
     };
     reader.readAsDataURL(file);
+});
+
+logoImageInput.addEventListener("change", (e) => {
+    const file = e.target.files[0];
+    if (file && file.type === "image/svg+xml") {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+            customLogoSrc = evt.target.result;
+            generateQR();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        alert("Please select an SVG file for the logo.");
+    }
 });
 
 // 10.9 Button to remove the chosen background image
