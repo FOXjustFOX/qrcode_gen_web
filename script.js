@@ -639,6 +639,133 @@ function downloadQRCodeAsSVG() {
         finalizeSvgDownload(svg, text);
     }
 }
+function copyQRCodeAsSVG() {
+    // Get the current text content
+    const text = textInput.value.trim();
+
+    if (!text) {
+        return; // Don't generate if there's no text
+    }
+
+    // Create a QR code using the same approach as in generateQR
+    const qrCode = QRCode.create(text, { errorCorrectionLevel: "H" });
+
+    // Get current colors and settings
+    const qrColor = qrColorInput.value;
+    const bgColor = transparentBg.checked ? "transparent" : bgColorInput.value;
+    const rotationDegrees = parseFloat(rotationRange.value) || 0;
+
+    // Calculate how much larger the SVG needs to be to accommodate rotation
+    // Using the diagonal as the maximum dimension (sqrt(2) ≈ 1.414 times larger for 45° rotation)
+    const rotationRadians = Math.abs((rotationDegrees * Math.PI) / 180);
+    const expansionFactor = Math.max(
+        Math.abs(Math.cos(rotationRadians)) +
+            Math.abs(Math.sin(rotationRadians)),
+        1
+    );
+
+    // Base size for the QR code
+    const baseSize = 1000;
+    // Expanded size to prevent cutoff during rotation
+    const expandedSize = Math.ceil(baseSize * expansionFactor);
+
+    // Add padding around the QR code (10% of base size)
+    const paddingSize = baseSize * 0.1;
+    const size = expandedSize + paddingSize * 2;
+
+    // Center point of the SVG
+    const centerX = size / 2;
+    const centerY = size / 2;
+
+    // Original margins for the QR code
+    const marginPx = baseSize * (margin / qrSize);
+    const usableSize = baseSize - 2 * marginPx;
+    const cellSize = usableSize / qrCode.modules.size;
+
+    // Start SVG document with a transparent background (entire SVG is transparent)
+    let svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">`;
+
+    // Create a group for the entire content
+    svg += "<g>";
+
+    // Create a group for QR code with rotation
+    svg += `<g transform="translate(${centerX}, ${centerY}) rotate(${rotationDegrees})">`;
+
+    // The actual QR code area (to contain the background color)
+    // This rect is sized exactly to match only the QR code area, not the entire SVG
+    const qrAreaSize = baseSize;
+    const qrAreaX = -qrAreaSize / 2; // Centered
+    const qrAreaY = -qrAreaSize / 2; // Centered
+
+    // Add background only for the QR code area, not the whole SVG
+    if (bgColor !== "transparent") {
+        svg += `<rect x="${qrAreaX}" y="${qrAreaY}" width="${qrAreaSize}" height="${qrAreaSize}" fill="${bgColor}" />`;
+    }
+
+    // Draw QR modules - positioned relative to center
+    const qrX = -baseSize / 2;
+    const qrY = -baseSize / 2;
+
+    // Logo dimensions
+    const logoSize = usableSize * 0.2; // 20% of usable area
+    const safeZone = logoSize * 1.1;
+    const logoStartOffset = (usableSize - safeZone) / 2;
+    const logoStart = marginPx + logoStartOffset;
+    const logoEnd = logoStart + safeZone;
+
+    // Use a path to avoid gaps between adjacent squares
+    let pathData = "";
+
+    qrCode.modules.data.forEach((bit, index) => {
+        if (!bit) return; // Only draw dark modules
+
+        const col = index % qrCode.modules.size;
+        const row = Math.floor(index / qrCode.modules.size);
+
+        // Position relative to the top-left of the centered QR code
+        const x = qrX + marginPx + col * cellSize;
+        const y = qrY + marginPx + row * cellSize;
+
+        // Calculate logo position in the rotated coordinate system
+        const rotatedLogoStart = qrX + logoStart;
+        const rotatedLogoEnd = qrX + logoEnd;
+
+        // Skip logo area if needed
+        if (includeLogoCheckbox.checked) {
+            const intersectsSafeZone = !(
+                x + cellSize < rotatedLogoStart ||
+                x > rotatedLogoEnd ||
+                y + cellSize < rotatedLogoStart ||
+                y > rotatedLogoEnd
+            );
+
+            if (intersectsSafeZone) return;
+        }
+
+        // Instead of individual rects, add to path data
+        pathData += `M${x},${y}h${cellSize}v${cellSize}h${-cellSize}z`;
+    });
+
+    // Add the combined path for all QR modules
+    svg += `<path d="${pathData}" fill="${qrColor}" />`;
+
+    // Close the rotation group
+    svg += `</g>`;
+
+    // Add logo if needed - OUTSIDE the rotation transform to keep it horizontal
+    if (includeLogoCheckbox.checked) {
+        handleSvgLogo(svg, size, logoSize, qrColor, rotationDegrees).then(
+            (logoSvg) => {
+                svg = logoSvg;
+                copyQrToClipboard(svg);
+            }
+        );
+    } else {
+        // Close the main group
+        svg += "</g>";
+        copyQrToClipboard(svg);
+    }
+}
 
 /**
  * Handles the logo addition to the SVG and returns the updated SVG
@@ -805,11 +932,11 @@ function finalizeSvgDownload(svg, text) {
 /**
  * Copies the current displayed QR code as an image (PNG) to the clipboard.
  */
-function copyQrToClipboard() {
-    qrCanvas.toBlob((blob) => {
-        const item = new ClipboardItem({ "image/png": blob });
-        navigator.clipboard.write([item]);
-    });
+function copyQrToClipboard(svg) {
+
+    svg += "</svg>";
+
+    navigator.clipboard.writeText(svg);
 
     // Indicate success (swap icon)
     copyBtnImg.src = "images/done.png";
@@ -846,7 +973,7 @@ downloadSvgBtn.addEventListener("click", (e) => {
 });
 copyBtn.addEventListener("click", (e) => {
     e.preventDefault();
-    copyQrToClipboard();
+    copyQRCodeAsSVG();
 });
 
 // 10.4 Toggle transparent background
