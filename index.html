@@ -3,6 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="icon"
+            type="image/png"
+            href="images/logo/wrss_wita.png"
+            sizes="16x16" />
         <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
         <link rel="stylesheet" href="styles.css" />
         <title>QR Code Generator</title>
@@ -31,7 +36,7 @@
                             <p class="section-title">Kolor kodu QR:</p>
                             <input type="color" id="qrColor" />
                             <div id="logo-container">
-                                <p class="section-title">Z logiem WRSS-u?</p>
+                                <p class="section-title">Logo?</p>
                                 <input
                                     type="checkbox"
                                     id="includeLogo"
@@ -39,7 +44,7 @@
                                     checked />
                             </div>
                         </div>
-                        <div class="section-container">
+                        <div class="section-container color-section">
                             <p class="section-title">Kolor tła:</p>
                             <input type="color" id="bgColor" value="#ffffff" />
 
@@ -49,7 +54,7 @@
                                 id="transparentBg"
                                 class="button" />
                         </div>
-                        <div class="section-container">
+                        <div class="section-container image-section">
                             <p class="section-title">Grafika:</p>
                             <div id="image-container">
                                 <label
@@ -71,6 +76,33 @@
                                 class="button"
                                 style="display: none">
                                 <p>Usuń zdjęcie tła</p>
+                            </button>
+                        </div>
+                        <div class="section-container image-section">
+                            <p class="section-title">Własne logo:</p>
+                            <div id="logo-image-container">
+                                <label
+                                    for="logo-image"
+                                    id="logo-icon-image"
+                                    class="button">
+                                    <img
+                                        id="logo-image-preview"
+                                        alt="własne logo" />
+                                    <img
+                                        src="images/Group.png"
+                                        id="add-image-logo"
+                                        alt="add image logo" /><input
+                                        type="file"
+                                        id="logo-image"
+                                        name="logo-image"
+                                        accept=".svg" />
+                                </label>
+                            </div>
+                            <button
+                                id="logo-remove-button"
+                                class="button"
+                                style="display: none">
+                                <p>Usuń logo</p>
                             </button>
                         </div>
                     </div>
@@ -101,12 +133,20 @@
                         <canvas id="canvas"></canvas>
                     </div>
                     <div id="save-buttons" style="display: none">
-                        <button id="downloadBtn" class="button">
+                        <button id="downloadPngBtn" class="button">
                             <img
                                 class="save-button"
-                                id="download-button-img"
-                                src="images/download.png"
-                                alt="download button" />
+                                id="download-png-button-img"
+                                src="images/png.png"
+                                alt="download PNG button" />
+                        </button>
+
+                        <button id="downloadSvgBtn" class="button">
+                            <img
+                                class="save-button"
+                                id="download-svg-button-img"
+                                src="images/svg.png"
+                                alt="Download SVG button" />
                         </button>
 
                         <button id="copyBtn" class="button">
@@ -114,7 +154,7 @@
                                 class="save-button"
                                 id="copy-button-img"
                                 src="images/copy.png"
-                                alt="copy button" />
+                                alt="copy svg button" />
                         </button>
                     </div>
                 </div>

@@ -7,16 +7,22 @@
     font-style: black;
 }
 
+form {
+    width: 100%;
+}
+
 html,
 body {
     margin: 0;
     padding: 0;
-    min-height: 100vh;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     box-sizing: border-box;
     font-family: "Averta", sans-serif;
+    padding-bottom: 50px;
+    
 }
 #container {
     flex: 1;
@@ -37,10 +43,12 @@ body {
     margin: 20px;
     padding: 10px;
 }
+
 .disabled {
     pointer-events: none;
     opacity: 0.2;
 }
+
 #title-container {
     display: flex;
     box-sizing: border-box;
@@ -51,6 +59,7 @@ body {
     border: 3px solid black;
     border-radius: 20px;
 }
+
 #title {
     padding: 10px;
     font-size: x-large;
@@ -64,6 +73,7 @@ body {
     border: 3px solid black;
     border-radius: 10px;
 }
+
 #sections {
     width: 100%;
     display: grid;
@@ -82,7 +92,12 @@ body {
     border: 3px solid black;
     border-radius: 20px;
     box-sizing: border-box;
+
 }
+
+.image-section {
+    height: min-content;
+} 
 
 .section-title {
     width: 100%;
@@ -91,6 +106,20 @@ body {
     text-align: center;
     font-size: 1.5rem;
 }
+
+#logo-image {
+    display: none;
+}
+
+#icon-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
 #image-container {
     width: 100%;
     aspect-ratio: 1;
@@ -103,13 +132,22 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: 100% 100%;
+    transition: opacity 0.2s ease;
+
 }
-#icon-image {
+
+#icon-image-container {
     width: 100%;
-    height: 100%;
+    aspect-ratio: 1;
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 3px dashed black;
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
 }
 
 #add-image-icon {
@@ -120,7 +158,13 @@ body {
 #bg-image {
     display: none;
 }
-#image-remove-button {
+
+#bgColor {
+    transition: opacity 0.2s ease;
+
+}
+
+#image-remove-button, #logo-remove-button {
     width: 100%;
     max-width: 300px;
     height: auto;
@@ -271,4 +315,52 @@ header {
 footer {
     text-align: center;
     margin-top: auto;
+    position: fixed;
+    bottom: 0;
+    background-color: #ffffff;
+    width: 100%;
+}
+
+#logo-image-container {
+    width: 100%;
+    aspect-ratio: 1;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px dashed black;
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 100%;
+    position: relative;
+    transition: opacity 0.2s ease;
+
+}
+
+#logo-icon-image {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#add-image-logo {
+    width: 25%;
+    height: 25%;
+}
+
+#logo-image-preview{
+    display: none;
+}
+
+#logo-image {
+    display: none;
+}
+
+#transparentBg {
+    transition: opacity 0.2s ease;
+
 }
