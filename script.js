@@ -21,56 +21,40 @@
 // 1. ELEMENT REFERENCES & GLOBAL CONSTANTS
 // --------------------------------------------------------------------
 
-/** @type {HTMLInputElement} */
 const textInput = document.getElementById("text");
 
-/** @type {HTMLDivElement} */
 const qrContainer = document.getElementById("qr-container");
 
-/** @type {HTMLCanvasElement} */
 const qrCanvas = document.getElementById("canvas");
 
-/** @type {HTMLInputElement} */
 const qrColorInput = document.getElementById("qrColor");
 
-/** @type {HTMLInputElement} */
 const bgColorInput = document.getElementById("bgColor");
 
-/** @type {HTMLButtonElement} */
 const downloadPngBtn = document.getElementById("downloadPngBtn");
-/** @type {HTMLImageElement} */
 const downloadPngBtnImg = document.getElementById("download-png-button-img");
 
 const downloadSvgBtn = document.getElementById("downloadSvgBtn");
 
 const downloadSvgBtnImg = document.getElementById("download-svg-button-img");
 
-/** @type {HTMLButtonElement} */
 const copyBtn = document.getElementById("copyBtn");
-/** @type {HTMLImageElement} */
 const copyBtnImg = document.getElementById("copy-button-img");
 
-/** @type {HTMLDivElement} */
 const saveBtns = document.getElementById("save-buttons");
 
-/** @type {HTMLInputElement} */
 const transparentBg = document.getElementById("transparentBg");
 
-/** @type {HTMLInputElement} */
 const includeLogoCheckbox = document.getElementById("includeLogo");
 
-/** @type {HTMLInputElement} */
 const bgImageInput = document.getElementById("bg-image");
 
 const logoImageInput = document.getElementById("logo-image");
 
 let customLogoSrc = null;
 
-/** @type {HTMLDivElement} */
 const imageContainer = document.getElementById("image-container");
-/** @type {HTMLDivElement} */
 const addImageIcon = document.getElementById("add-image-icon");
-/** @type {HTMLButtonElement} */
 
 const addImageLogo = document.getElementById("add-image-logo");
 
@@ -80,9 +64,7 @@ const logoImageContainer = document.getElementById("logo-image-container");
 
 const logoRemoveButton = document.getElementById("logo-remove-button");
 
-/** @type {HTMLInputElement} */
 const rotationRange = document.getElementById("rotationRange");
-/** @type {HTMLInputElement} */
 const rotationValueDisplay = document.getElementById("rotationValue");
 
 /** Path to the SVG logo that can be placed in the center of the QR. */
@@ -506,7 +488,6 @@ function downloadQRCode() {
     downloadPngImg.src = "images/done.png";
 
     resetButtonImage(downloadPngBtnImg, "images/png.png");
-
 }
 
 /**
@@ -639,6 +620,11 @@ function downloadQRCodeAsSVG() {
         finalizeSvgDownload(svg, text);
     }
 }
+
+/**
+ * Generates an SVG representation of the QR code and copies it to the clipboard as text.
+ * Uses the same SVG generation logic as downloadQRCodeAsSVG but copies instead of downloading.
+ */
 function copyQRCodeAsSVG() {
     // Get the current text content
     const text = textInput.value.trim();
@@ -926,14 +912,12 @@ function finalizeSvgDownload(svg, text) {
     downloadSvgBtnImg.src = "images/done.png";
 
     resetButtonImage(downloadSvgBtnImg, "images/svg.png");
-
 }
 
 /**
  * Copies the current displayed QR code as an image (PNG) to the clipboard.
  */
 function copyQrToClipboard(svg) {
-
     svg += "</svg>";
 
     navigator.clipboard.writeText(svg);
@@ -942,7 +926,6 @@ function copyQrToClipboard(svg) {
     copyBtnImg.src = "images/done.png";
 
     resetButtonImage(copyBtnImg, "images/copy.png");
-
 }
 
 // --------------------------------------------------------------------
@@ -984,7 +967,7 @@ transparentBg.addEventListener("change", () => {
 
 // 10.5 Toggle inclusion of the logo
 includeLogoCheckbox.addEventListener("change", () => {
-    toggleDisabled()
+    toggleDisabled();
     generateQR();
 });
 
@@ -1116,6 +1099,10 @@ function updateImageDisplay() {
     }
 }
 
+/**
+ * Updates the preview when a logo is selected by the user.
+ * Creates an object URL for the selected SVG file and displays it in the preview area.
+ */
 function updateLogoDisplay() {
     const file = logoInput.files[0];
     if (file.type === "image/svg+xml") {
@@ -1127,10 +1114,9 @@ function updateLogoDisplay() {
         img.style.position = "absolute";
         img.style.width = "25%";
         img.style.height = "25%";
-        img.style.objectFit = "contain"
+        img.style.objectFit = "contain";
 
         addImageLogo.style.display = "none";
-
     }
 }
 
@@ -1160,4 +1146,3 @@ const fileTypes = [
 function validFileType(file) {
     return fileTypes.includes(file.type);
 }
-
