@@ -682,6 +682,7 @@ function copyQRCodeAsSVG() {
     const qrAreaSize = baseSize;
     const qrAreaX = -qrAreaSize / 2; // Centered
     const qrAreaY = -qrAreaSize / 2; // Centered
+    
 
     // Add background only for the QR code area, not the whole SVG
     if (bgColor !== "transparent") {
