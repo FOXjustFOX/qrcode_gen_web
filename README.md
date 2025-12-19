@@ -4,6 +4,29 @@ This documentation provides an overview of the functionality, usage, and compone
 
 ---
 
+## Getting Started
+
+### Prerequisites
+- Node.js (v14 or higher)
+- npm
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Start the server:
+```bash
+npm start
+```
+
+4. Open your browser and navigate to `http://localhost:3000`
+
+---
+
 ## Features
 
 -   **Customizable QR Code**: Generate QR codes with user-defined text, colors, backgrounds, and more.
@@ -13,6 +36,7 @@ This documentation provides an overview of the functionality, usage, and compone
 -   **Rotation Control**: Rotate the QR code from 0 to 360 degrees.
 -   **Debounced Input**: Prevents excessive re-rendering while typing.
 -   **Download and Copy**: Save the QR code as a PNG file or copy it to the clipboard.
+-   **Logging System**: Automatically logs each QR code generation with timestamp, URL, and client IP address to both console and file (`qrcode_logs.txt`).
 
 ---
 

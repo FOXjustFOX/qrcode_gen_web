@@ -21,6 +21,25 @@
 // 1. ELEMENT REFERENCES & GLOBAL CONSTANTS
 // --------------------------------------------------------------------
 
+/**
+ * Logs QR code generation to the server
+ * @param {string} url - The URL/text used to generate the QR code
+ */
+async function logQRCodeGeneration(url) {
+    try {
+        await fetch('/api/log-qr', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ url })
+        });
+    } catch (error) {
+        // Silently fail if logging fails - don't disrupt user experience
+        console.error('Failed to log QR code generation:', error);
+    }
+}
+
 const textInput = document.getElementById("text");
 
 const qrContainer = document.getElementById("qr-container");
@@ -259,6 +278,9 @@ async function generateQR() {
     const offsetY = -900 / 2;
     mainCtx.drawImage(offscreenCanvas, offsetX, offsetY, 900, 900);
     mainCtx.restore();
+
+    // Log the QR code generation to the server
+    await logQRCodeGeneration(text);
 
     // Display the "Download" and "Copy" buttons
     saveBtns.style.display = "flex";
