@@ -22,7 +22,9 @@ const apiLimiter = rateLimit({
 // Middleware
 app.use(express.json());
 
-// Serve only specific directories/files to avoid exposing sensitive files
+// Serve static files
+// Note: For better security in production, consider moving public files to a separate 'public' directory
+// Current configuration denies access to dotfiles (.env, .git, etc.) to protect sensitive information
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use('/fonts', express.static(path.join(__dirname, 'fonts')));
 app.use(express.static(__dirname, {
