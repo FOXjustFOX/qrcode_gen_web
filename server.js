@@ -22,6 +22,11 @@ app.use(express.static(__dirname));
 app.post('/api/log-qr', (req, res) => {
     const { url } = req.body;
     
+    // Validate input
+    if (!url || typeof url !== 'string') {
+        return res.status(400).json({ error: 'Invalid URL parameter' });
+    }
+    
     // Get client IP address (handles proxy headers)
     const clientIp = req.headers['x-forwarded-for']?.split(',')[0] || 
                      req.socket.remoteAddress || 
@@ -33,7 +38,7 @@ app.post('/api/log-qr', (req, res) => {
     // Log to console (terminal)
     console.log(`QR Code Generated - ${logEntry.trim()}`);
     
-    // Log to file
+    // Log to file asynchronously (non-blocking)
     fs.appendFile(LOG_FILE, logEntry, (err) => {
         if (err) {
             console.error('Error writing to log file:', err);
