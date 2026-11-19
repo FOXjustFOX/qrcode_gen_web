@@ -250,15 +250,20 @@ header {
 #options-container {
     display: flex;
 }
+#save-buttons-container {
+    display: flex;
+    flex-direction: column;
+    border: 3px solid black;
+    border-radius: 20px;
+}
 #save-buttons {
+    width: 100%;
     padding: 10px 0 10px 0;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
-    border: 3px solid black;
-    border-radius: 20px;
-    font-size: large;
+    border: 0;
 }
 #save-buttons .button {
     border: 0px;
