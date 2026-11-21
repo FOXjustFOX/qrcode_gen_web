@@ -937,7 +937,7 @@ function finalizeSvgDownload(svg, text) {
 }
 
 /**
- * Copies the current displayed QR code as an image (PNG) to the clipboard.
+ * Copies the current displayed QR code as an svg to the clipboard.
  */
 function copyQrToClipboard(svg) {
     svg += "</svg>";
