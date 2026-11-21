@@ -488,7 +488,7 @@ function downloadQRCode() {
     link.click();
 
     // Indicate success (swap icon)
-    downloadPngImg.src = "images/done.png";
+    downloadPngBtnImg.src = "images/done.png";
 
     resetButtonImage(downloadPngBtnImg, "images/png.png");
 }
@@ -496,19 +496,32 @@ function downloadQRCode() {
 /**
  * Copies the current displayed QR code as a PNG
  */
-function copyQRCode() {
-    // Turn the canvas data into blob
-    qrCanvas.toBlob((blob) => {
+async function copyQRCode() {
+    try {
+        // Turn the canvas data into blob
+        const blob = await new Promise((resolve, reject) => {
+                qrCanvas.toBlob((blob) => {
+                if (!blob) {
+                    reject(new Error("blob generation failed"));
+                    return;
+                }
+
+                resolve(blob);
+            }, "image/png");
+        });
+
         // Copy blob into clipboard
-        navigator.clipboard.write([
+        await navigator.clipboard.write([
             new ClipboardItem({
                 [blob.type]: blob,
             }),
         ]);
-    }, "image/png");
 
-    // Indicate success (swap icon)
-    copyPngBtnImg.src = "images/done.png";
+        // Indicate success (swap icon)
+        copyPngBtnImg.src = "images/done.png";
+    } catch (error) {
+        copyPngBtnImg.src = "images/error.png";
+    }
 
     resetButtonImage(copyPngBtnImg, "images/copy.png");
 }
@@ -940,13 +953,17 @@ function finalizeSvgDownload(svg, text) {
 /**
  * Copies the current displayed QR code as an svg to the clipboard.
  */
-function copyQrToClipboard(svg) {
+async function copyQrToClipboard(svg) {
     svg += "</svg>";
 
-    navigator.clipboard.writeText(svg);
+    try {
+        await navigator.clipboard.writeText(svg);
 
-    // Indicate success (swap icon)
-    copySvgBtnImg.src = "images/done.png";
+        // Indicate success (swap icon)
+        copySvgBtnImg.src = "images/done.png";
+    } catch (error) {
+        copySvgBtnImg.src = "images/error.png";
+    }
 
     resetButtonImage(copySvgBtnImg, "images/copy.png");
 }
