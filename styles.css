@@ -256,7 +256,7 @@ header {
     border: 3px solid black;
     border-radius: 20px;
 }
-#save-buttons {
+.save-buttons {
     width: 100%;
     padding: 10px 0 10px 0;
     display: flex;
@@ -265,7 +265,7 @@ header {
     flex-direction: row;
     border: 0;
 }
-#save-buttons .button {
+.save-buttons .button {
     border: 0px;
 }
 .save-button {
