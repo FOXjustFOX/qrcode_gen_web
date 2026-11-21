@@ -520,6 +520,7 @@ async function copyQRCode() {
         // Indicate success (swap icon)
         copyPngBtnImg.src = "images/done.png";
     } catch (error) {
+        // Indicate error (swap icon)
         copyPngBtnImg.src = "images/error.png";
     }
 
@@ -962,6 +963,7 @@ async function copyQrToClipboard(svg) {
         // Indicate success (swap icon)
         copySvgBtnImg.src = "images/done.png";
     } catch (error) {
+        // Indicate error (swap icon)
         copySvgBtnImg.src = "images/error.png";
     }
 
