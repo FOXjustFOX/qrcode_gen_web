@@ -209,6 +209,7 @@ async function generateQR() {
     downloadPngBtnImg.src = "images/png.png";
     downloadSvgBtnImg.src = "images/svg.png";
     // downloadBtnImg.src = "images/download.png";
+    copyPngBtnImg.src = "images/copy.png";
     copySvgBtnImg.src = "images/copy.png";
 
     // Gather current user inputs
