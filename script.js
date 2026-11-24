@@ -34,14 +34,16 @@ const bgColorInput = document.getElementById("bgColor");
 const downloadPngBtn = document.getElementById("downloadPngBtn");
 const downloadPngBtnImg = document.getElementById("download-png-button-img");
 
-const downloadSvgBtn = document.getElementById("downloadSvgBtn");
+const copyPngBtn = document.getElementById("copyPngBtn");
+const copyPngBtnImg = document.getElementById("copy-png-button-img");
 
+const downloadSvgBtn = document.getElementById("downloadSvgBtn");
 const downloadSvgBtnImg = document.getElementById("download-svg-button-img");
 
-const copyBtn = document.getElementById("copyBtn");
-const copyBtnImg = document.getElementById("copy-button-img");
+const copySvgBtn = document.getElementById("copySvgBtn");
+const copySvgBtnImg = document.getElementById("copy-svg-button-img");
 
-const saveBtns = document.getElementById("save-buttons");
+const saveBtns = document.getElementById("save-buttons-container");
 
 const transparentBg = document.getElementById("transparentBg");
 
@@ -207,7 +209,8 @@ async function generateQR() {
     downloadPngBtnImg.src = "images/png.png";
     downloadSvgBtnImg.src = "images/svg.png";
     // downloadBtnImg.src = "images/download.png";
-    copyBtnImg.src = "images/copy.png";
+    copyPngBtnImg.src = "images/copy.png";
+    copySvgBtnImg.src = "images/copy.png";
 
     // Gather current user inputs
     const text = textInput.value.trim();
@@ -485,9 +488,43 @@ function downloadQRCode() {
     link.click();
 
     // Indicate success (swap icon)
-    downloadPngImg.src = "images/done.png";
+    downloadPngBtnImg.src = "images/done.png";
 
     resetButtonImage(downloadPngBtnImg, "images/png.png");
+}
+
+/**
+ * Copies the current displayed QR code as a PNG
+ */
+async function copyQRCode() {
+    try {
+        // Turn the canvas data into blob
+        const blob = await new Promise((resolve, reject) => {
+                qrCanvas.toBlob((blob) => {
+                if (!blob) {
+                    reject(new Error("blob generation failed"));
+                    return;
+                }
+
+                resolve(blob);
+            }, "image/png");
+        });
+
+        // Copy blob into clipboard
+        await navigator.clipboard.write([
+            new ClipboardItem({
+                [blob.type]: blob,
+            }),
+        ]);
+
+        // Indicate success (swap icon)
+        copyPngBtnImg.src = "images/done.png";
+    } catch (error) {
+        // Indicate error (swap icon)
+        copyPngBtnImg.src = "images/error.png";
+    }
+
+    resetButtonImage(copyPngBtnImg, "images/copy.png");
 }
 
 /**
@@ -915,17 +952,22 @@ function finalizeSvgDownload(svg, text) {
 }
 
 /**
- * Copies the current displayed QR code as an image (PNG) to the clipboard.
+ * Copies the current displayed QR code as an svg to the clipboard.
  */
-function copyQrToClipboard(svg) {
+async function copyQrToClipboard(svg) {
     svg += "</svg>";
 
-    navigator.clipboard.writeText(svg);
+    try {
+        await navigator.clipboard.writeText(svg);
 
-    // Indicate success (swap icon)
-    copyBtnImg.src = "images/done.png";
+        // Indicate success (swap icon)
+        copySvgBtnImg.src = "images/done.png";
+    } catch (error) {
+        // Indicate error (swap icon)
+        copySvgBtnImg.src = "images/error.png";
+    }
 
-    resetButtonImage(copyBtnImg, "images/copy.png");
+    resetButtonImage(copySvgBtnImg, "images/copy.png");
 }
 
 // --------------------------------------------------------------------
@@ -950,11 +992,15 @@ downloadPngBtn.addEventListener("click", (e) => {
     e.preventDefault();
     downloadQRCode();
 });
+copyPngBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    copyQRCode();
+});
 downloadSvgBtn.addEventListener("click", (e) => {
     e.preventDefault();
     downloadQRCodeAsSVG();
 });
-copyBtn.addEventListener("click", (e) => {
+copySvgBtn.addEventListener("click", (e) => {
     e.preventDefault();
     copyQRCodeAsSVG();
 });
